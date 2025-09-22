@@ -6,7 +6,7 @@ import java.util.List;
 @Data
 public class Player {
     private int playerId;
-    private User user;
+//    private User user;
     private List<Integer> teamIds;
     private List<Integer> leagueIds;
     private double averageScore;
