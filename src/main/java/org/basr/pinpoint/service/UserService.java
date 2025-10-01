@@ -7,6 +7,8 @@ import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -22,5 +24,9 @@ public class UserService {
 
     public User getSingleUser(long id) {
         return this.repos.findById(id).orElseThrow(()-> new ResourceNotFoundException("User " + id + " not found"));
+    }
+
+    public List<User> getAllUsers() {
+        return this.repos.findAll();
     }
 }

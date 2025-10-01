@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -33,15 +34,18 @@ public class UserController {
         return ResponseEntity.created(location).body(userResponseDto);
     }
 
-    //    @GetMapping
-//    public ResponseEntity<List<User>> getAllUsers() {
-//        return ResponseEntity.ok(this.repos.findAll());
-//    }
-//
+        @GetMapping
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+            return ResponseEntity.ok(UserMapper.toResponseDtoList(this.service.getAllUsers()));
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(UserMapper.toResponseDto(this.service.getSingleUser(id)));
     }
+
+
 //
 //    @GetMapping("/after")
 //    public ResponseEntity<List<User>> getAllUsersByAfter(@RequestParam LocalDate date) {
