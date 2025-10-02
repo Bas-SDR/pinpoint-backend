@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -34,9 +35,9 @@ public class UserController {
         return ResponseEntity.created(location).body(userResponseDto);
     }
 
-        @GetMapping
+    @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-            return ResponseEntity.ok(UserMapper.toResponseDtoList(this.service.getAllUsers()));
+        return ResponseEntity.ok(UserMapper.toResponseDtoList(this.service.getAllUsers()));
     }
 
 
@@ -45,21 +46,16 @@ public class UserController {
         return ResponseEntity.ok(UserMapper.toResponseDto(this.service.getSingleUser(id)));
     }
 
+    @GetMapping("/after")
+    public ResponseEntity<List<UserResponseDto>> getAllUsersByAfter(@RequestParam LocalDate date) {
+        return ResponseEntity.ok(UserMapper.toResponseDtoList(this.service.findByDobAfter(date)));
+    }
+    //TODO Add new Admin Dto so dob can be sent as well.
 
-//
-//    @GetMapping("/after")
-//    public ResponseEntity<List<User>> getAllUsersByAfter(@RequestParam LocalDate date) {
-//        return ResponseEntity.ok(this.repos.findByDobAfter(date));
-//    }
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-//        if (this.userMap.containsKey(id)) {
-//            this.userMap.put(id, user);
-//            return ResponseEntity.ok(user);
-//        }
-//        else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDto userRequestDto) {
+        User updatedUser = service.updateUser(id, userRequestDto);
+        return ResponseEntity.ok(UserMapper.toResponseDto(updatedUser));
+    }
 }
+

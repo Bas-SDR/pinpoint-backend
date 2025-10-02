@@ -7,6 +7,7 @@ import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -29,4 +30,15 @@ public class UserService {
     public List<User> getAllUsers() {
         return this.repos.findAll();
     }
+
+    public User updateUser(long id, UserRequestDto userRequestDto) {
+        User user = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
+        UserMapper.updateEntity(user, userRequestDto);
+        return repos.save(user);
+    }
+
+    public List<User> findByDobAfter(LocalDate date) {
+        return this.repos.findByDobAfter(date);
+    }
+
 }
