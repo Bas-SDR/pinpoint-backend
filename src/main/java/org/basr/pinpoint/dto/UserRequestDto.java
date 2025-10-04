@@ -22,6 +22,9 @@ public class UserRequestDto {
     private String email;
     @Past
     private LocalDate dob;
+    @NotBlank
+    @Size(min=8, max=64)
+    private String password;
     @Size(min = 10, max = 12)
     @Pattern(
             regexp = "^(\\d{10}|\\+\\d{11,12})$",

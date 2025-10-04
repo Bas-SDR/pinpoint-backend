@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByDobAfter(LocalDate date);
+    Optional<User> findByEmail(String email);
 }
 
 

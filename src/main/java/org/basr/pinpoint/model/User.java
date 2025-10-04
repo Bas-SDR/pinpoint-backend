@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -20,18 +22,23 @@ public class User {
     private String lastName;
     @Column(unique = true)
     private String email;
+    private String password;
     private String phone;
     private LocalDate dob;
     private String profilePic;
 
-    public User(String firstName, String lastName, String email) {
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles = new HashSet<>();
+
+    public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
     }
 
-    public User(String firstName, String lastName, String email, String phone, LocalDate dob) {
-        this(firstName, lastName, email);
+    public User(String firstName, String lastName, String email, String password, String phone, LocalDate dob) {
+        this(firstName, lastName, email, password);
         this.phone = phone;
         this.dob = dob;
     }
