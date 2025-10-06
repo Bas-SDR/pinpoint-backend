@@ -1,21 +1,31 @@
 package org.basr.pinpoint.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "roles")
 public class Role {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
+    private Long id;
+    @Column(nullable = false, unique = true)
     private String rolename;
 
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    //https://stackoverflow.com/questions/55920191/why-the-hashcode-is-forcing-my-jpa-mapping-to-fetch-the-child-entities-even-on
+    @EqualsAndHashCode.Exclude
+    private Set<User> users = new HashSet<>();
+
+    public Role(String rolename) {
+        this.rolename = rolename;
+    }
 
 }

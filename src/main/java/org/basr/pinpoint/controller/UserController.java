@@ -8,6 +8,7 @@ import org.basr.pinpoint.mapper.UserMapper;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -53,6 +54,7 @@ public class UserController {
     //TODO Add new Admin Dto so dob can be sent as well.
 
     @PutMapping("/{id}")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ADMIN')")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDto userRequestDto) {
         User updatedUser = service.updateUser(id, userRequestDto);
         return ResponseEntity.ok(UserMapper.toResponseDto(updatedUser));
