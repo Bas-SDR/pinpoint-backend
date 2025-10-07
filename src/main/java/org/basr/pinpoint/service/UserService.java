@@ -5,7 +5,6 @@ import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.mapper.UserMapper;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.basr.pinpoint.helper.PasswordHelper;
 
@@ -16,14 +15,17 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository repos;
+    private final RoleService roleService;
 
-    public UserService(UserRepository repos, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repos, RoleService roleService) {
         this.repos = repos;
+        this.roleService = roleService;
     }
 
     public User createUser(UserRequestDto userRequestDto) {
         User user = UserMapper.toEntity(userRequestDto);
         user.setPassword(PasswordHelper.encodePassword(userRequestDto));
+        roleService.assignDefaultRole(user);
         return repos.save(user);
     }
 
