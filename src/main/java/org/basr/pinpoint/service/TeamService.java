@@ -1,11 +1,14 @@
 package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.TeamCreateDto;
+import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.mapper.TeamMapper;
 import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.TeamRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TeamService {
@@ -29,5 +32,13 @@ public class TeamService {
         }
 
         return repos.save(team);
+    }
+
+    public List<Team> getAllTeams() {
+        return this.repos.findAll();
+    }
+
+    public Team getTeamById(Long id) {
+        return this.repos.findById(id).orElseThrow(()-> new ResourceNotFoundException("Team " + id + " not found"));
     }
 }
