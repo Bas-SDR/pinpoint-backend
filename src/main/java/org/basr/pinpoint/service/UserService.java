@@ -25,7 +25,7 @@ public class UserService {
     public User createUser(UserRequestDto userRequestDto) {
         User user = UserMapper.toEntity(userRequestDto);
         user.setPassword(PasswordHelper.encodePassword(userRequestDto));
-        roleService.assignDefaultRole(user);
+        roleService.assignDefaultRoleToUser(user);
         return repos.save(user);
     }
 
