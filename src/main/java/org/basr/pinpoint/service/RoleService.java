@@ -24,6 +24,7 @@ public class RoleService {
                 .map(role -> {
                     RoleDto dto = new RoleDto();
                     dto.setRolename(role.getRolename());
+                    dto.setId(role.getId());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -42,6 +43,4 @@ public class RoleService {
     public void assignDefaultRole(User user) {
         user.getRoles().add(getRoleByName("ROLE_USER"));
     }
-
-
 }
