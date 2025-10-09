@@ -54,7 +54,6 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
-
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<String> handleGenericException(Exception ex) {
 //        return ResponseEntity

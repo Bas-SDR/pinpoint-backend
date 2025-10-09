@@ -2,6 +2,7 @@ package org.basr.pinpoint.controller;
 
 import jakarta.validation.Valid;
 import org.basr.pinpoint.dto.TeamCreateDto;
+import org.basr.pinpoint.dto.TeamPatchDto;
 import org.basr.pinpoint.dto.TeamRequestDto;
 import org.basr.pinpoint.dto.TeamResponseDto;
 import org.basr.pinpoint.helper.UriHelper;
@@ -23,7 +24,7 @@ public class TeamController {
 
     private final TeamService service;
 
-    public TeamController(TeamService service, TeamService teamService) {
+    public TeamController(TeamService service) {
         this.service = service;
     }
 
@@ -59,7 +60,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TeamResponseDto> updateTeam(@PathVariable Long id, @RequestBody TeamRequestDto dto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+    public ResponseEntity<TeamResponseDto> updateTeam(@PathVariable Long id, @RequestBody TeamRequestDto teamRequestDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
 
         Team team = service.getTeamById(id);
 
@@ -71,7 +72,25 @@ public class TeamController {
             throw new AccessDeniedException("Only the captain or admin can update the team");
         }
 
-        Team updated = service.updateTeam(id, dto);
+        Team updated = service.updateTeam(id, teamRequestDto);
         return ResponseEntity.ok(TeamMapper.toResponseDto(updated));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<TeamResponseDto> updatePartialTeam(@PathVariable Long id, @RequestBody TeamPatchDto teamPatchDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+
+        Team team = service.getTeamById(id);
+
+        boolean isCaptain = team.getCaptain() != null && team.getCaptain().getId() == principal.getId();
+        boolean isAdmin = principal.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ADMIN"));
+
+        if (!isCaptain && !isAdmin) {
+            throw new AccessDeniedException("Only the captain or admin can update the team");
+        }
+
+        TeamResponseDto teamResponseDto = TeamMapper.toResponseDto(service.patchTeam(id, teamPatchDto));
+
+        return ResponseEntity.ok(teamResponseDto);
     }
 }

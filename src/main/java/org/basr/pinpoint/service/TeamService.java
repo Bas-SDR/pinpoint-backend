@@ -2,6 +2,7 @@ package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.TeamCreateDto;
 import org.basr.pinpoint.dto.TeamRequestDto;
+import org.basr.pinpoint.dto.TeamPatchDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.mapper.TeamMapper;
 import org.basr.pinpoint.model.Team;
@@ -62,6 +63,26 @@ public class TeamService {
             User captain = userService.getSingleUser(teamRequestDto.getCaptainId());
             team.setCaptain(captain);
         }
+        return repos.save(team);
+    }
+
+    public Team patchTeam(Long id, TeamPatchDto updatedTeam) {
+        Team team = repos.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Team " + id + " not found"));
+
+        if (updatedTeam.getTeamName() != null) {
+            team.setTeamName(updatedTeam.getTeamName());
+        }
+
+        if (updatedTeam.getTeamPic() != null) {
+            team.setTeamPic(updatedTeam.getTeamPic());
+        }
+
+        if (updatedTeam.getCaptainId() != null) {
+            User captain = userService.getSingleUser(updatedTeam.getCaptainId());
+            team.setCaptain(captain);
+        }
+
         return repos.save(team);
     }
 }
