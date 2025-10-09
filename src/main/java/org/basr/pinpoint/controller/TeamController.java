@@ -2,15 +2,19 @@ package org.basr.pinpoint.controller;
 
 import jakarta.validation.Valid;
 import org.basr.pinpoint.dto.TeamCreateDto;
+import org.basr.pinpoint.dto.TeamRequestDto;
 import org.basr.pinpoint.dto.TeamResponseDto;
 import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.TeamMapper;
 import org.basr.pinpoint.model.Team;
+import org.basr.pinpoint.security.MyUserDetails;
 import org.basr.pinpoint.service.TeamService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -19,7 +23,7 @@ public class TeamController {
 
     private final TeamService service;
 
-    public TeamController(TeamService service) {
+    public TeamController(TeamService service, TeamService teamService) {
         this.service = service;
     }
 
@@ -42,5 +46,32 @@ public class TeamController {
     @GetMapping("/{id}")
     public ResponseEntity<TeamResponseDto> getTeamById(@PathVariable Long id) {
         return ResponseEntity.ok(TeamMapper.toResponseDto(this.service.getTeamById(id)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTeamById(@PathVariable Long id) {
+        var result = service.deleteTeam(id);
+        if (result) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TeamResponseDto> updateTeam(@PathVariable Long id, @RequestBody TeamRequestDto dto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+
+        Team team = service.getTeamById(id);
+
+        boolean isCaptain = team.getCaptain() != null && team.getCaptain().getId() == principal.getId();
+        boolean isAdmin = principal.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ADMIN"));
+
+        if (!isCaptain && !isAdmin) {
+            throw new AccessDeniedException("Only the captain and admin can update the team");
+        }
+
+        Team updated = service.updateTeam(id, dto);
+        return ResponseEntity.ok(TeamMapper.toResponseDto(updated));
     }
 }

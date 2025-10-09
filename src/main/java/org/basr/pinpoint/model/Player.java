@@ -1,6 +1,7 @@
 package org.basr.pinpoint.model;
 
 import lombok.Data;
+
 import java.util.List;
 
 @Data

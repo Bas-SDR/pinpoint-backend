@@ -13,4 +13,5 @@ public class TeamResponseDto {
     private Long captainId;
     private String captainFirstName;
     private String captainLastName;
+    private String teamPic;
 }

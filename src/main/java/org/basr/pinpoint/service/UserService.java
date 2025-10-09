@@ -2,11 +2,11 @@ package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.UserRequestDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
+import org.basr.pinpoint.helper.PasswordHelper;
 import org.basr.pinpoint.mapper.UserMapper;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.basr.pinpoint.helper.PasswordHelper;
 
 import java.time.LocalDate;
 import java.util.List;

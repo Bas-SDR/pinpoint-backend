@@ -24,6 +24,8 @@ public class TeamMapper {
         TeamResponseDto teamResponseDto = new TeamResponseDto();
         teamResponseDto.setId(team.getId());
         teamResponseDto.setTeamName(team.getTeamName());
+        teamResponseDto.setTeamPic(team.getTeamPic());
+
         if (team.getCaptain() != null) {
             teamResponseDto.setCaptainId(team.getCaptain().getId());
             teamResponseDto.setCaptainFirstName(team.getCaptain().getFirstName());
@@ -34,5 +36,10 @@ public class TeamMapper {
 
     public static List<TeamResponseDto> toResponseDtoList(List<Team> teams) {
         return teams.stream().map(TeamMapper::toResponseDto).collect(Collectors.toList());
+    }
+
+    public static void updateEntity(Team team, TeamRequestDto teamRequestDto) {
+        team.setTeamName(teamRequestDto.getTeamName());
+        team.setTeamPic(teamRequestDto.getTeamPic());
     }
 }
