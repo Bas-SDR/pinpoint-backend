@@ -68,7 +68,7 @@ public class TeamController {
                 .anyMatch(a -> a.getAuthority().equals("ADMIN"));
 
         if (!isCaptain && !isAdmin) {
-            throw new AccessDeniedException("Only the captain and admin can update the team");
+            throw new AccessDeniedException("Only the captain or admin can update the team");
         }
 
         Team updated = service.updateTeam(id, dto);
