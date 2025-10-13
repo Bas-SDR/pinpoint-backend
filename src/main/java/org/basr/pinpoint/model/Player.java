@@ -3,8 +3,6 @@ package org.basr.pinpoint.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,25 +13,16 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private int playerId;
-//    private User user;
-    private List<Integer> teamIds;
-    private List<Integer> leagueIds;
     private double averageScore;
-    private Stats stats;
 
-    @OneToOne(mappedBy = "users")
+    @OneToOne(mappedBy = "player")
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "team_id")
-    Team myTeam;
+    private Team team;
 
-    @Data
-    public static class Stats {
-        private int highestGame;
-        private int highestSeries;
-        private int totalPinfall;
-        private int averagePinfall;
-        private int perfectGames;
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "stats_id")
+    private Stats stats;
 }

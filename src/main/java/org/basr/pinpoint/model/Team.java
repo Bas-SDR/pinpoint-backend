@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -36,8 +38,7 @@ public class Team {
     @JoinColumn(name = "captain_id")
     private User captain;
 
+    @OneToMany(mappedBy = "team")
+    private List<Player> players = new ArrayList<>();
 
-    //TODO Uncomment once Team class is finished and Player is worked on.
-//    @OneToMany(mappedBy = "team")
-//    private List<Player> players = new ArrayList<>();
 }
