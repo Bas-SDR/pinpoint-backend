@@ -40,7 +40,11 @@ public class RoleService {
                 .orElseThrow(() -> new RuntimeException("Role not found: " + rolename));
     }
 
-    public void assignDefaultRole(User user) {
+    public void assignDefaultRoleToUser(User user) {
         user.getRoles().add(getRoleByName("ROLE_USER"));
+    }
+
+    public void assignTeamCaptain(User user) {
+        user.getRoles().add(getRoleByName("ROLE_TEAMCAPTAIN"));
     }
 }

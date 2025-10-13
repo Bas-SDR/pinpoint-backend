@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -14,12 +14,30 @@ import java.util.List;
 @Table(name="teams")
 public class Team {
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    private long id;
 
     @Column(unique = true)
-    private String name;
+    private String teamName;
+    private String teamPic;
+    private LocalDate creationDate;
 
-    @OneToMany(mappedBy = "team")
-    private List<Player> members;
+    public Team(String teamName) {
+        this.teamName = teamName;
+        this.creationDate = LocalDate.now();
+    }
+
+    public Team(String teamName, String teamPic) {
+        this.teamName = teamName;
+        this.teamPic = teamPic;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "captain_id")
+    private User captain;
+
+
+    //TODO Uncomment once Team class is finished and Player is worked on.
+//    @OneToMany(mappedBy = "team")
+//    private List<Player> players = new ArrayList<>();
 }

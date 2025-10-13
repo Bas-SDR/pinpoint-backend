@@ -15,6 +15,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private int playerId;
+//    private User user;
     private List<Integer> teamIds;
     private List<Integer> leagueIds;
     private double averageScore;

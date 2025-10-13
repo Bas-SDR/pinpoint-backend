@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>>methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
 
         ex
@@ -32,16 +33,26 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String>dataIntegrityViolationException(DataIntegrityViolationException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already registered.");
+    public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        String msg = ex.getRootCause() != null ? ex.getRootCause().getMessage() : "";
+
+        if (msg.contains("team_name")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Team name already exists.");
+        } else if (msg.contains("email")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already registered.");
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("This entry already exists.");
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> handleUserNotFound(UsernameNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Invalid email or password");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
 
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<String> handleGenericException(Exception ex) {
