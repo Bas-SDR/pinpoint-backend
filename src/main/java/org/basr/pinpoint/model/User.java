@@ -28,7 +28,7 @@ public class User {
     private String profilePic;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "players", nullable = false)
+    @JoinColumn(name = "player_id")
     private Player player;
 
     @ManyToMany(fetch = FetchType.EAGER)

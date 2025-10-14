@@ -22,6 +22,12 @@ public class Stats {
     private int totalPinfall;
     private int perfectGames;
 
+    public double getAverageScore() {
+        if (gamesPlayed == 0)
+            return 0;
+        return  (double)totalPinfall / gamesPlayed;
+    }
+
     @OneToOne(mappedBy = "stats")
     Player player;
 }

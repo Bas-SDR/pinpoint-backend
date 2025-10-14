@@ -13,10 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="teams")
+@Table(name = "teams")
 public class Team {
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(unique = true)
@@ -38,7 +38,11 @@ public class Team {
     @JoinColumn(name = "captain_id")
     private User captain;
 
-    @OneToMany(mappedBy = "team")
+    @ManyToMany
+    @JoinTable(
+            name = "players_teams",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id")
+    )
     private List<Player> players = new ArrayList<>();
-
 }
