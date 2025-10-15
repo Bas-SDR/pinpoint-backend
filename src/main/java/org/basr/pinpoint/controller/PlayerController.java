@@ -5,6 +5,7 @@ import org.basr.pinpoint.mapper.PlayerMapper;
 import org.basr.pinpoint.service.PlayerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,12 @@ public class PlayerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PlayerResponseDto>> findAllPlayers() {
+    public ResponseEntity<List<PlayerResponseDto>> getAllPlayers() {
         return ResponseEntity.ok(PlayerMapper.toResponseDtoList(this.service.getAllPlayers()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PlayerResponseDto> getPlayerById(@PathVariable Long id) {
+        return ResponseEntity.ok(PlayerMapper.toResponseDto(this.service.getPlayerById(id)));
     }
 }

@@ -3,7 +3,6 @@ package org.basr.pinpoint.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.basr.pinpoint.model.Stats;
 
 import java.util.List;
 

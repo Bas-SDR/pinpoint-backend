@@ -16,8 +16,8 @@ public class PlayerService {
         this.repos = repos;
     }
 
-    public Player findById(Long id) {
-        return this.repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player not found"));
+    public Player getPlayerById(Long id) {
+        return this.repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player " + id + " not found"));
     }
 
     public List<Player> getAllPlayers() {
