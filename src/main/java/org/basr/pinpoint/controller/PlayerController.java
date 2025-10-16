@@ -30,4 +30,14 @@ public class PlayerController {
     public ResponseEntity<PlayerResponseDto> getPlayerById(@PathVariable Long id) {
         return ResponseEntity.ok(PlayerMapper.toResponseDto(this.service.getPlayerById(id)));
     }
+
+    @GetMapping("/top10/highestseries")
+    public List<PlayerResponseDto> getTop10HighestSeries() {
+        return service.getTop10HighestSeries();
+    }
+
+    @GetMapping("/top10/highestgame")
+    public List<PlayerResponseDto> getTop10HighestGame() {
+        return service.getTop10HighestGame();
+    }
 }
