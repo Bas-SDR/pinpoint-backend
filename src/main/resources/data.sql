@@ -1,3 +1,18 @@
+INSERT INTO player_stats (games_played, highest_game, highest_series, total_pinfall, perfect_games)
+VALUES (45, 300, 720, 8920, 2),
+       (60, 300, 780, 10400, 5),
+       (32, 300, 680, 7500, 1),
+       (51, 265, 700, 9600, 0),
+       (40, 289, 740, 8300, 0),
+       (55, 275, 710, 10200, 0),
+       (28, 240, 660, 6700, 0),
+       (38, 260, 695, 7800, 0),
+       (47, 280, 730, 9100, 0),
+       (36, 258, 685, 7700, 0);
+
+INSERT INTO players(stats_id)
+SELECT id FROM player_stats ORDER BY id;
+
 INSERT INTO users(first_name, last_name, email, phone, dob, profile_pic, password)
 VALUES ('Alice', 'Johnson', 'user@example.com', '9876543210', '1992-05-14', 'https://pics.example.com/alice.jpg',
         '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
@@ -49,3 +64,27 @@ VALUES ('Pin Pioneers', 'https://example.com/images/pin-pioneers.png', '2021-03-
        ('The Gutter Gurus', 'https://example.com/images/gutter-gurus.png', '2021-06-30', 10),
        ('Lucky Strikes', 'https://example.com/images/lucky-strikes.png', '2023-12-03', 6),
        ('Bowl Movement', 'https://example.com/images/bowl-movement.png', '2020-04-14', 8);
+
+INSERT INTO players_teams (team_id, player_id)
+VALUES
+    (1, 1), (1, 2), (1, 3),
+    (2, 4), (2, 5), (2, 6),
+    (3, 3), (3, 7),
+    (4, 7), (4, 8), (4, 2),
+    (5, 1), (5, 5),
+    (6, 9), (6, 10), (6, 2),
+    (7, 4), (7, 8),
+    (8, 10), (8, 1),
+    (9, 6), (9, 7),
+    (10, 8), (10, 9);
+
+UPDATE users SET player_id = 1 WHERE id = 1;
+UPDATE users SET player_id = 2 WHERE id = 2;
+UPDATE users SET player_id = 3 WHERE id = 3;
+UPDATE users SET player_id = 4 WHERE id = 4;
+UPDATE users SET player_id = 5 WHERE id = 5;
+UPDATE users SET player_id = 6 WHERE id = 6;
+UPDATE users SET player_id = 7 WHERE id = 7;
+UPDATE users SET player_id = 8 WHERE id = 8;
+UPDATE users SET player_id = 9 WHERE id = 9;
+UPDATE users SET player_id = 10 WHERE id = 10;

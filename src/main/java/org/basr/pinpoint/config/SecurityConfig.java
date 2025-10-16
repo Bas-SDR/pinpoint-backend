@@ -63,6 +63,7 @@ public class SecurityConfig  {
                         .requestMatchers(HttpMethod.POST, "/logout").permitAll()
                         .requestMatchers("/roles").hasRole("ADMIN")
                         .requestMatchers("/users").authenticated()
+                        .requestMatchers("/players").authenticated()
                         .requestMatchers("/**").permitAll()
                         .anyRequest().denyAll()
                 )

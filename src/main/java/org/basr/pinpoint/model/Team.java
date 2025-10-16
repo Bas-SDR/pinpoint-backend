@@ -6,15 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="teams")
+@Table(name = "teams")
 public class Team {
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(unique = true)
@@ -36,8 +38,11 @@ public class Team {
     @JoinColumn(name = "captain_id")
     private User captain;
 
-
-    //TODO Uncomment once Team class is finished and Player is worked on.
-//    @OneToMany(mappedBy = "team")
-//    private List<Player> players = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "players_teams",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id")
+    )
+    private List<Player> players = new ArrayList<>();
 }

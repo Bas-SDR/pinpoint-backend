@@ -1,24 +1,29 @@
 package org.basr.pinpoint.model;
 
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "players")
 public class Player {
-    private int playerId;
-//    private User user;
-    private List<Integer> teamIds;
-    private List<Integer> leagueIds;
-    private double averageScore;
-    private Stats stats;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
+    private Long playerId;
 
-    @Data
-    public static class Stats {
-        private int highestGame;
-        private int highestSeries;
-        private int totalPinfall;
-        private int averagePinfall;
-        private int perfectGames;
-    }
+    @OneToOne(mappedBy = "player")
+    private User user;
+
+    @ManyToMany(mappedBy = "players")
+    private List<Team> teams = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "stats_id")
+    private Stats stats;
 }

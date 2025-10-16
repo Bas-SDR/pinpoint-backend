@@ -27,6 +27,10 @@ public class User {
     private LocalDate dob;
     private String profilePic;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "player_id")
+    private Player player;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @JoinTable(
