@@ -15,7 +15,7 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private Long playerId;
+    private Long id;
 
     @OneToOne(mappedBy = "player")
     private User user;

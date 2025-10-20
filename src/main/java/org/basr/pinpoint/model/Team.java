@@ -45,4 +45,7 @@ public class Team {
             inverseJoinColumns = @JoinColumn(name = "player_id")
     )
     private List<Player> players = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "teams")
+    private List<League> leagues = new ArrayList<>();
 }
