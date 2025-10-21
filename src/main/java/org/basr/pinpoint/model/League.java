@@ -2,6 +2,8 @@ package org.basr.pinpoint.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.basr.pinpoint.enums.LeagueDay;
+import org.basr.pinpoint.enums.LeagueDivision;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -19,8 +21,10 @@ public class League {
     private Long id;
 
     private String leagueName;
-    private String division;
-    private String leagueDay;
+    @Enumerated(EnumType.STRING)
+    private LeagueDivision leagueDivision;
+    @Enumerated(EnumType.STRING)
+    private LeagueDay leagueDay;
     private LocalDate creationDate;
 
     @ManyToMany

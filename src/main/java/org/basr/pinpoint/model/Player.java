@@ -3,8 +3,8 @@ package org.basr.pinpoint.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -18,12 +18,15 @@ public class Player {
     private Long id;
 
     @OneToOne(mappedBy = "player")
+    @EqualsAndHashCode.Exclude
     private User user;
 
     @ManyToMany(mappedBy = "players")
-    private List<Team> teams = new ArrayList<>();
+    @EqualsAndHashCode.Exclude
+    private Set<Team> teams = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "stats_id")
     private Stats stats;
 }

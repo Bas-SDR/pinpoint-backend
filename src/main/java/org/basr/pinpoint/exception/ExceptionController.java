@@ -1,5 +1,6 @@
 package org.basr.pinpoint.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.nio.file.AccessDeniedException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +56,16 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<String> handleInvalidFormatException(InvalidFormatException ex) {
+        if (ex.getTargetType().isEnum()) {
+            String enumValue = Arrays.toString(ex.getTargetType().getEnumConstants());
+            Object usedValue = ex.getValue();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid value: \"" + usedValue + "\". Please use the following valid values: " + enumValue);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data submitted");
+        }
+    }
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<String> handleGenericException(Exception ex) {
 //        return ResponseEntity
