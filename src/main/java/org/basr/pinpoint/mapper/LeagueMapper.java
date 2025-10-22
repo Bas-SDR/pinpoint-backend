@@ -1,5 +1,6 @@
 package org.basr.pinpoint.mapper;
 
+import org.basr.pinpoint.dto.LeagueRequestDto;
 import org.basr.pinpoint.dto.LeagueResponseDto;
 import org.basr.pinpoint.dto.LeagueTeamInfoDto;
 import org.basr.pinpoint.model.League;
@@ -33,6 +34,14 @@ public class LeagueMapper {
                         team.getTeamName()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public static League toCreateEntity(LeagueRequestDto leagueRequestDto) {
+        return new League(
+                leagueRequestDto.getLeagueName(),
+                leagueRequestDto.getLeagueDivision(),
+                leagueRequestDto.getLeagueDay()
+        );
     }
 
 }

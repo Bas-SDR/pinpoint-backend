@@ -20,6 +20,7 @@ public class League {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @Column(unique = true)
     private String leagueName;
     @Enumerated(EnumType.STRING)
     private LeagueDivision leagueDivision;
@@ -35,4 +36,11 @@ public class League {
             inverseJoinColumns = @JoinColumn(name = "team_id")
     )
     private Set<Team> teams = new HashSet<>();
+
+    public League(String leagueName, LeagueDivision leagueDivision,  LeagueDay leagueDay) {
+        this.leagueName = leagueName;
+        this.leagueDivision = leagueDivision;
+        this.leagueDay = leagueDay;
+        this.creationDate = LocalDate.now();
+    }
 }
