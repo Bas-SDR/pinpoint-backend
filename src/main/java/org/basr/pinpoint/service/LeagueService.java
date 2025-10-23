@@ -1,5 +1,6 @@
 package org.basr.pinpoint.service;
 
+import org.basr.pinpoint.dto.LeaguePatchDto;
 import org.basr.pinpoint.dto.LeagueRequestDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.mapper.LeagueMapper;
@@ -31,8 +32,37 @@ public class LeagueService {
     }
 
     public League createLeague(LeagueRequestDto leagueRequestDto) {
-        League league = LeagueMapper.toCreateEntity(leagueRequestDto);
+        League league = LeagueMapper.toEntity(leagueRequestDto);
         return this.repos.save(league);
     }
 
+    public boolean deleteLeagueById(Long id) {
+        if (repos.existsById(id)) {
+            this.repos.deleteById(id);
+            return true;
+        } else
+            return false;
+    }
+
+    public League updateLeagueById(Long id, LeagueRequestDto leagueRequestDto) {
+        League league = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("League " + id + " not found"));
+        LeagueMapper.updateEntity(league, leagueRequestDto);
+        return repos.save(league);
+    }
+
+    public League patchLeagueById(Long id, LeaguePatchDto leaguePatchDto) {
+        League league = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("League " + id + " not found"));
+
+        if (leaguePatchDto.getLeagueName() != null) {
+            league.setLeagueName(leaguePatchDto.getLeagueName());
+        }
+        if (leaguePatchDto.getLeagueDivision() != null) {
+            league.setLeagueDivision(leaguePatchDto.getLeagueDivision());
+        }
+        if (leaguePatchDto.getLeagueDay() != null) {
+            league.setLeagueDay(leaguePatchDto.getLeagueDay());
+        }
+
+        return repos.save(league);
+    }
 }

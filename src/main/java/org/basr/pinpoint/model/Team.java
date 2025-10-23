@@ -23,6 +23,7 @@ public class Team {
     @Column(unique = true)
     private String teamName;
     private String teamPic;
+    @Column(updatable = false)
     private LocalDate creationDate;
 
     public Team(String teamName) {

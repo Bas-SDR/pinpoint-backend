@@ -1,5 +1,6 @@
 package org.basr.pinpoint.controller;
 
+import org.basr.pinpoint.dto.LeaguePatchDto;
 import org.basr.pinpoint.dto.LeagueRequestDto;
 import org.basr.pinpoint.dto.LeagueResponseDto;
 import org.basr.pinpoint.helper.UriHelper;
@@ -47,5 +48,29 @@ public class LeagueController {
         URI location = UriHelper.buildUri(league.getId());
 
         return ResponseEntity.created(location).body(leagueResponseDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLeagueById(@PathVariable Long id) {
+        var result = service.deleteLeagueById(id);
+        if (result) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LeagueResponseDto> updateLeagueById(@PathVariable Long id, @RequestBody LeagueRequestDto leagueRequestDto){
+        League league = service.updateLeagueById(id, leagueRequestDto);
+
+        return ResponseEntity.ok(LeagueMapper.toResponseDto(league));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<LeagueResponseDto> patchLeagueById(@PathVariable Long id, @RequestBody LeaguePatchDto leaguePatchDto){
+        League league = service.patchLeagueById(id, leaguePatchDto);
+
+        return ResponseEntity.ok(LeagueMapper.toResponseDto(league));
     }
 }

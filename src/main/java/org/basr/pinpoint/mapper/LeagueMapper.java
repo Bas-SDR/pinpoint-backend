@@ -36,12 +36,18 @@ public class LeagueMapper {
                 .collect(Collectors.toList());
     }
 
-    public static League toCreateEntity(LeagueRequestDto leagueRequestDto) {
+    public static League toEntity(LeagueRequestDto leagueRequestDto) {
         return new League(
                 leagueRequestDto.getLeagueName(),
                 leagueRequestDto.getLeagueDivision(),
                 leagueRequestDto.getLeagueDay()
         );
+    }
+
+    public static void updateEntity(League league, LeagueRequestDto dto) {
+        league.setLeagueName(dto.getLeagueName());
+        league.setLeagueDivision(dto.getLeagueDivision());
+        league.setLeagueDay(dto.getLeagueDay());
     }
 
 }

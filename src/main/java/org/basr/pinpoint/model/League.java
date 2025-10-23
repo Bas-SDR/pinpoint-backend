@@ -26,6 +26,7 @@ public class League {
     private LeagueDivision leagueDivision;
     @Enumerated(EnumType.STRING)
     private LeagueDay leagueDay;
+    @Column(updatable = false)
     private LocalDate creationDate;
 
     @ManyToMany
