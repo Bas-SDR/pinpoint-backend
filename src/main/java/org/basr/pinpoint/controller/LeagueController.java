@@ -1,10 +1,9 @@
 package org.basr.pinpoint.controller;
 
-import org.basr.pinpoint.dto.LeaguePatchDto;
-import org.basr.pinpoint.dto.LeagueRequestDto;
-import org.basr.pinpoint.dto.LeagueResponseDto;
+import org.basr.pinpoint.dto.*;
 import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.LeagueMapper;
+import org.basr.pinpoint.mapper.TeamMapper;
 import org.basr.pinpoint.model.League;
 import org.basr.pinpoint.service.LeagueService;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +36,11 @@ public class LeagueController {
     public ResponseEntity<LeagueResponseDto> getLeagueByName(@RequestParam String name){
         League league = service.getLeagueByName(name);
         return ResponseEntity.ok(LeagueMapper.toResponseDto(league));
+    }
+
+    @GetMapping("/{id}/teams")
+    public ResponseEntity<List<LeagueTeamInfoDto>> getTeamsByLeague(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getTeamsByLeagueId(id));
     }
 
     @PostMapping

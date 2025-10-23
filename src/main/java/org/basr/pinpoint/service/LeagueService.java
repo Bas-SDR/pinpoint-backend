@@ -2,6 +2,7 @@ package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.LeaguePatchDto;
 import org.basr.pinpoint.dto.LeagueRequestDto;
+import org.basr.pinpoint.dto.LeagueTeamInfoDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.mapper.LeagueMapper;
 import org.basr.pinpoint.model.League;
@@ -29,6 +30,12 @@ public class LeagueService {
 
     public League getLeagueByName(String leagueName) {
         return this.repos.findByLeagueName(leagueName).orElseThrow(() -> new ResourceNotFoundException("League \"" + leagueName + "\" not found"));
+    }
+
+    public List<LeagueTeamInfoDto> getTeamsByLeagueId(Long leagueId) {
+        League league = repos.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException("League " + leagueId + " not found"));
+
+        return LeagueMapper.toTeamDtoList(league.getTeams());
     }
 
     public League createLeague(LeagueRequestDto leagueRequestDto) {
