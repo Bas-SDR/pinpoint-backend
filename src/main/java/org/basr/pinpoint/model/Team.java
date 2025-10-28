@@ -3,11 +3,12 @@ package org.basr.pinpoint.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +23,7 @@ public class Team {
     @Column(unique = true)
     private String teamName;
     private String teamPic;
+    @Column(updatable = false)
     private LocalDate creationDate;
 
     public Team(String teamName) {
@@ -36,13 +38,19 @@ public class Team {
 
     @ManyToOne
     @JoinColumn(name = "captain_id")
+    @EqualsAndHashCode.Exclude
     private User captain;
 
     @ManyToMany
+    @EqualsAndHashCode.Exclude
     @JoinTable(
             name = "players_teams",
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "player_id")
     )
-    private List<Player> players = new ArrayList<>();
+    private Set<Player> players = new HashSet<>();
+
+    @ManyToMany(mappedBy = "teams")
+    @EqualsAndHashCode.Exclude
+    private Set<League> leagues = new HashSet<>();
 }

@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -28,6 +28,7 @@ public class User {
     private String profilePic;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "player_id")
     private Player player;
 
@@ -41,6 +42,7 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "captain")
+    @EqualsAndHashCode.Exclude
     private Set<Team> captainOfTeams = new HashSet<>();
 
     public User(String firstName, String lastName, String email, String password) {

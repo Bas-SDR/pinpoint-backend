@@ -16,8 +16,8 @@ public class TeamMapper {
         return team;
     }
 
-    public static Team toCreateEntity(TeamCreateDto dto) {
-        return new Team(dto.getTeamName());
+    public static Team toCreateEntity(TeamCreateDto teamCreateDto) {
+        return new Team(teamCreateDto.getTeamName());
     }
 
     public static TeamResponseDto toResponseDto(Team team) {

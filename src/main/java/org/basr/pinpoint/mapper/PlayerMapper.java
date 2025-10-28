@@ -8,6 +8,7 @@ import org.basr.pinpoint.model.Stats;
 import org.basr.pinpoint.model.Team;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PlayerMapper {
@@ -27,7 +28,7 @@ public class PlayerMapper {
         return players.stream().map(PlayerMapper::toResponseDto).collect(Collectors.toList());
     }
 
-    private static List<PlayerTeamInfoDto> toTeamDtoList(List<Team> teams) {
+    private static List<PlayerTeamInfoDto> toTeamDtoList(Set<Team> teams) {
         return teams.stream().map(team -> new PlayerTeamInfoDto(
                         team.getId(),
                         team.getTeamName(),

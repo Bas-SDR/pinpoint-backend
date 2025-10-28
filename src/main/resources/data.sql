@@ -11,7 +11,9 @@ VALUES (45, 300, 720, 8920, 2),
        (36, 258, 685, 7700, 0);
 
 INSERT INTO players(stats_id)
-SELECT id FROM player_stats ORDER BY id;
+SELECT id
+FROM player_stats
+ORDER BY id;
 
 INSERT INTO users(first_name, last_name, email, phone, dob, profile_pic, password)
 VALUES ('Alice', 'Johnson', 'user@example.com', '9876543210', '1992-05-14', 'https://pics.example.com/alice.jpg',
@@ -66,17 +68,30 @@ VALUES ('Pin Pioneers', 'https://example.com/images/pin-pioneers.png', '2021-03-
        ('Bowl Movement', 'https://example.com/images/bowl-movement.png', '2020-04-14', 8);
 
 INSERT INTO players_teams (team_id, player_id)
-VALUES
-    (1, 1), (1, 2), (1, 3),
-    (2, 4), (2, 5), (2, 6),
-    (3, 3), (3, 7),
-    (4, 7), (4, 8), (4, 2),
-    (5, 1), (5, 5),
-    (6, 9), (6, 10), (6, 2),
-    (7, 4), (7, 8),
-    (8, 10), (8, 1),
-    (9, 6), (9, 7),
-    (10, 8), (10, 9);
+VALUES (1, 1),
+       (1, 2),
+       (1, 3),
+       (2, 4),
+       (2, 5),
+       (2, 6),
+       (3, 3),
+       (3, 7),
+       (4, 7),
+       (4, 8),
+       (4, 2),
+       (5, 1),
+       (5, 5),
+       (6, 9),
+       (6, 10),
+       (6, 2),
+       (7, 4),
+       (7, 8),
+       (8, 10),
+       (8, 1),
+       (9, 6),
+       (9, 7),
+       (10, 8),
+       (10, 9);
 
 UPDATE users SET player_id = 1 WHERE id = 1;
 UPDATE users SET player_id = 2 WHERE id = 2;
@@ -88,3 +103,49 @@ UPDATE users SET player_id = 7 WHERE id = 7;
 UPDATE users SET player_id = 8 WHERE id = 8;
 UPDATE users SET player_id = 9 WHERE id = 9;
 UPDATE users SET player_id = 10 WHERE id = 10;
+
+INSERT INTO leagues (league_name, league_division, league_day, creation_date)
+VALUES ('Monday League', 'A', 'MONDAY', '2023-01-10'),
+       ('Tuesday Night', 'B', 'TUESDAY', '2023-02-14'),
+       ('Wednesday League', 'A', 'WEDNESDAY', '2023-03-22'),
+       ('Thursday Masters', 'PRO', 'THURSDAY', '2023-04-28'),
+       ('Weekend Open', 'C', 'SATURDAY', '2023-05-12'),
+       ('Friday Night Lights', 'B', 'FRIDAY', '2023-06-09');
+
+INSERT INTO league_teams (league_id, team_id)
+VALUES (1, 1),
+       (1, 3),
+       (1, 5),
+       (1, 6);
+
+INSERT INTO league_teams (league_id, team_id)
+VALUES (2, 2),
+       (2, 4),
+       (2, 6),
+       (2, 1),
+       (2, 5);
+
+INSERT INTO league_teams (league_id, team_id)
+VALUES (3, 3),
+       (3, 2),
+       (3, 6);
+
+INSERT INTO league_teams (league_id, team_id)
+VALUES (4, 4),
+       (4, 5),
+       (4, 1),
+       (4, 2),
+       (4, 3),
+       (4, 6);
+
+INSERT INTO league_teams (league_id, team_id)
+VALUES (5, 2),
+       (5, 5),
+       (5, 6),
+       (5, 3);
+
+INSERT INTO league_teams (league_id, team_id)
+VALUES (6, 1),
+       (6, 4),
+       (6, 3),
+       (6, 2);
