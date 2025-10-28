@@ -6,10 +6,14 @@ import org.basr.pinpoint.dto.LeagueTeamInfoDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.mapper.LeagueMapper;
 import org.basr.pinpoint.model.League;
+import org.basr.pinpoint.model.Player;
+import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.repository.LeagueRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class LeagueService {
@@ -32,10 +36,21 @@ public class LeagueService {
         return this.repos.findByLeagueName(leagueName).orElseThrow(() -> new ResourceNotFoundException("League \"" + leagueName + "\" not found"));
     }
 
-    public List<LeagueTeamInfoDto> getTeamsByLeagueId(Long leagueId) {
-        League league = repos.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException("League " + leagueId + " not found"));
+    public List<LeagueTeamInfoDto> getTeamsByLeagueId(Long id) {
+        League league = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("League " + id + " not found"));
 
         return LeagueMapper.toTeamDtoList(league.getTeams());
+    }
+
+    public List<Player> getPlayersInLeagueById(Long id) {
+        League league = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("League " + id + " not found"));
+
+        Set<Team> teams = league.getTeams();
+
+        //https://www.java67.com/2016/03/how-to-use-flatmap-in-java-8-stream.html
+        return teams.stream()
+                .flatMap(team -> team.getPlayers().stream())
+                .collect(Collectors.toList());
     }
 
     public League createLeague(LeagueRequestDto leagueRequestDto) {

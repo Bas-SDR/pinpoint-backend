@@ -1,9 +1,11 @@
 package org.basr.pinpoint.mapper;
 
+import org.basr.pinpoint.dto.LeaguePlayerInfoDto;
 import org.basr.pinpoint.dto.LeagueRequestDto;
 import org.basr.pinpoint.dto.LeagueResponseDto;
 import org.basr.pinpoint.dto.LeagueTeamInfoDto;
 import org.basr.pinpoint.model.League;
+import org.basr.pinpoint.model.Player;
 import org.basr.pinpoint.model.Team;
 
 import java.util.List;
@@ -48,6 +50,16 @@ public class LeagueMapper {
         league.setLeagueName(dto.getLeagueName());
         league.setLeagueDivision(dto.getLeagueDivision());
         league.setLeagueDay(dto.getLeagueDay());
+    }
+
+    public static List<LeaguePlayerInfoDto> toLeaguePlayerInfoDtoList(Set<Player> players) {
+        return players.stream()
+                .map(player -> new LeaguePlayerInfoDto(
+                        player.getId(),
+                        player.getUser().getFirstName(),
+                        player.getUser().getLastName()
+                ))
+                .collect(Collectors.toList());
     }
 
 }

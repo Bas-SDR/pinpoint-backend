@@ -3,13 +3,14 @@ package org.basr.pinpoint.controller;
 import org.basr.pinpoint.dto.*;
 import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.LeagueMapper;
-import org.basr.pinpoint.mapper.TeamMapper;
 import org.basr.pinpoint.model.League;
+import org.basr.pinpoint.model.Player;
 import org.basr.pinpoint.service.LeagueService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -41,6 +42,14 @@ public class LeagueController {
     @GetMapping("/{id}/teams")
     public ResponseEntity<List<LeagueTeamInfoDto>> getTeamsByLeague(@PathVariable Long id) {
         return ResponseEntity.ok(service.getTeamsByLeagueId(id));
+    }
+
+    @GetMapping("/{id}/players")
+    public ResponseEntity<List<LeaguePlayerInfoDto>> getPlayersInLeagueById(@PathVariable Long id) {
+        List<Player> players = service.getPlayersInLeagueById(id);
+        List<LeaguePlayerInfoDto> playerDtoList = LeagueMapper.toLeaguePlayerInfoDtoList(new HashSet<>(players));
+
+        return ResponseEntity.ok(playerDtoList);
     }
 
     @PostMapping
