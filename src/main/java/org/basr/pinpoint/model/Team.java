@@ -7,7 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -53,4 +55,8 @@ public class Team {
     @ManyToMany(mappedBy = "teams")
     @EqualsAndHashCode.Exclude
     private Set<League> leagues = new HashSet<>();
+
+    @OneToMany(mappedBy = "team")
+    @EqualsAndHashCode.Exclude
+    private List<Game> games = new ArrayList<>();
 }
