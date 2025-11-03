@@ -1,11 +1,21 @@
 package org.basr.pinpoint.mapper;
 
-import org.basr.pinpoint.dto.GameLeagueResponseDto;
-import org.basr.pinpoint.dto.GamePlayerResponseDto;
-import org.basr.pinpoint.dto.GameTeamResponseDto;
+import org.basr.pinpoint.dto.*;
 import org.basr.pinpoint.model.Game;
 
 public class GameMapper {
+
+    public static GameFullResponseDto toGameFullResponseDto(Game game) {
+        GameFullResponseDto gameFullResponseDto = new GameFullResponseDto();
+        gameFullResponseDto.setId(game.getId());
+        gameFullResponseDto.setDatePlayed(game.getDatePlayed());
+        gameFullResponseDto.setPinfall(game.getPinfall());
+        gameFullResponseDto.setLeagueId(game.getLeague().getId());
+        gameFullResponseDto.setTeamId(game.getTeam().getId());
+        gameFullResponseDto.setPlayerId(game.getLeague().getId());
+
+        return gameFullResponseDto;
+    }
 
     public static GameLeagueResponseDto toLeagueResponseDto(Game game) {
         GameLeagueResponseDto gameLeagueResponseDto = new GameLeagueResponseDto();
