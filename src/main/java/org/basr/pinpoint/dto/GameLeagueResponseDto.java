@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class GameLeagueResponseDto extends GameBaseDto {
-    private long leagueId;
+    private Long leagueId;
 }

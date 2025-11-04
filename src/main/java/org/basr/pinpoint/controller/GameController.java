@@ -1,14 +1,15 @@
 package org.basr.pinpoint.controller;
 
-import org.basr.pinpoint.dto.GameFullResponseDto;
-import org.basr.pinpoint.dto.GameLeagueResponseDto;
-import org.basr.pinpoint.dto.GamePlayerResponseDto;
-import org.basr.pinpoint.dto.GameTeamResponseDto;
+import jakarta.validation.Valid;
+import org.basr.pinpoint.dto.*;
+import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.GameMapper;
+import org.basr.pinpoint.model.Game;
 import org.basr.pinpoint.service.GameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -39,5 +40,16 @@ public class GameController {
     @GetMapping("/leagues/{id}")
     public ResponseEntity<List<GameLeagueResponseDto>> getGameByLeagueId(@PathVariable long id) {
         return ResponseEntity.ok(GameMapper.toGameLeagueResponseDtoList(this.service.getGamesByLeague(id)));
+    }
+
+    @PostMapping
+    public ResponseEntity<GameFullResponseDto> createGame(@Valid @RequestBody GameCreateDto gameCreateDto) {
+
+        Game game = this.service.createGame(gameCreateDto);
+        GameFullResponseDto gameFullResponseDto = GameMapper.toGameFullResponseDto(game);
+
+        URI location =  UriHelper.buildUri(game.getId());
+
+        return ResponseEntity.created(location).body(gameFullResponseDto);
     }
 }

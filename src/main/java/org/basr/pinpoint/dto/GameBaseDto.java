@@ -12,5 +12,5 @@ import java.time.LocalDate;
 public class GameBaseDto {
     private Long id;
     private LocalDate datePlayed;
-    private int pinfall;
+    private Integer pinfall;
 }

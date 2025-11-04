@@ -2,12 +2,25 @@ package org.basr.pinpoint.mapper;
 
 import org.basr.pinpoint.dto.*;
 import org.basr.pinpoint.model.Game;
+import org.basr.pinpoint.model.League;
+import org.basr.pinpoint.model.Player;
+import org.basr.pinpoint.model.Team;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameMapper {
+
+    public static Game toCreateEntity(GameCreateDto gameCreateDto, Player player, Team team, League league) {
+        Game game = new Game();
+                game.setDatePlayed(gameCreateDto.getDatePlayed());
+                game.setPinfall(gameCreateDto.getPinfall());
+                game.setGameNumber(gameCreateDto.getGameNumber());
+                game.setPlayer(player);
+                game.setTeam(team);
+                game.setLeague(league);
+        return game;
+    }
 
     public static GameFullResponseDto toGameFullResponseDto(Game game) {
         GameFullResponseDto gameFullResponseDto = new GameFullResponseDto();
@@ -31,7 +44,7 @@ public class GameMapper {
         return gameLeagueResponseDto;
     }
 
-    public static List<GameLeagueResponseDto> toGameLeagueResponseDtoList (List<Game> games) {
+    public static List<GameLeagueResponseDto> toGameLeagueResponseDtoList(List<Game> games) {
         return games.stream().map(GameMapper::toLeagueResponseDto).collect(Collectors.toList());
     }
 
@@ -45,7 +58,7 @@ public class GameMapper {
         return gameTeamResponseDto;
     }
 
-    public static List<GameTeamResponseDto> toGameTeamResponseDtoList (List<Game> games) {
+    public static List<GameTeamResponseDto> toGameTeamResponseDtoList(List<Game> games) {
         return games.stream().map(GameMapper::toTeamResponseDto).collect(Collectors.toList());
     }
 
@@ -60,7 +73,7 @@ public class GameMapper {
         return gamePlayerResponseDto;
     }
 
-    public static List<GamePlayerResponseDto> toGamePlayerResponseDtoList (List<Game> games) {
+    public static List<GamePlayerResponseDto> toGamePlayerResponseDtoList(List<Game> games) {
         return games.stream().map(GameMapper::toPlayerResponseDto).collect(Collectors.toList());
     }
 }

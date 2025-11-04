@@ -1,7 +1,12 @@
 package org.basr.pinpoint.service;
 
+import org.basr.pinpoint.dto.GameCreateDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
+import org.basr.pinpoint.mapper.GameMapper;
 import org.basr.pinpoint.model.Game;
+import org.basr.pinpoint.model.League;
+import org.basr.pinpoint.model.Player;
+import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.repository.GameRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +16,15 @@ import java.util.List;
 public class GameService {
 
     private final GameRepository repos;
+    private final PlayerService playerService;
+    private final TeamService teamService;
+    private final LeagueService leagueService;
 
-    public GameService(GameRepository repos) {
+    public GameService(GameRepository repos, PlayerService playerService, TeamService teamService,  LeagueService leagueService) {
         this.repos = repos;
+        this.playerService = playerService;
+        this.teamService = teamService;
+        this.leagueService = leagueService;
     }
 
     public Game getGameById(long id) {
@@ -31,4 +42,14 @@ public class GameService {
     public List<Game> getGamesByLeague(long leagueId) {
         return this.repos.getGamesByLeagueId(leagueId);
     }
+
+    public Game createGame(GameCreateDto gameCreateDto) {
+        Player player = playerService.getPlayerById(gameCreateDto.getPlayerId());
+        Team team = teamService.getTeamById(gameCreateDto.getTeamId());
+        League league = leagueService.getLeagueById(gameCreateDto.getLeagueId());
+
+        Game game = GameMapper.toCreateEntity(gameCreateDto, player, team, league);
+        return this.repos.save(game);
+    }
+
 }
