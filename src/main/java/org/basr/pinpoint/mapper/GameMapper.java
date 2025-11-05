@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 
 public class GameMapper {
 
-    public static Game toCreateEntity(GameCreateDto gameCreateDto, Player player, Team team, League league) {
+    public static Game toEntity(GameRequestDto gameRequestDto, Player player, Team team, League league) {
         Game game = new Game();
-                game.setDatePlayed(gameCreateDto.getDatePlayed());
-                game.setPinfall(gameCreateDto.getPinfall());
-                game.setGameNumber(gameCreateDto.getGameNumber());
+                game.setDatePlayed(gameRequestDto.getDatePlayed());
+                game.setPinfall(gameRequestDto.getPinfall());
+                game.setGameNumber(gameRequestDto.getGameNumber());
                 game.setPlayer(player);
                 game.setTeam(team);
                 game.setLeague(league);
@@ -75,6 +75,15 @@ public class GameMapper {
 
     public static List<GamePlayerResponseDto> toGamePlayerResponseDtoList(List<Game> games) {
         return games.stream().map(GameMapper::toPlayerResponseDto).collect(Collectors.toList());
+    }
+
+    public static void updateEntity(Game game, GameRequestDto gameRequestDto, Player player, Team team, League league) {
+        game.setDatePlayed(gameRequestDto.getDatePlayed());
+        game.setPinfall(gameRequestDto.getPinfall());
+        game.setGameNumber(gameRequestDto.getGameNumber());
+        game.setPlayer(player);
+        game.setTeam(team);
+        game.setLeague(league);
     }
 }
 

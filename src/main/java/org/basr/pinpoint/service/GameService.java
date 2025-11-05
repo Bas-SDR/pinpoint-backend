@@ -1,6 +1,6 @@
 package org.basr.pinpoint.service;
 
-import org.basr.pinpoint.dto.GameCreateDto;
+import org.basr.pinpoint.dto.GameRequestDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.mapper.GameMapper;
 import org.basr.pinpoint.model.Game;
@@ -8,10 +8,8 @@ import org.basr.pinpoint.model.League;
 import org.basr.pinpoint.model.Player;
 import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.repository.GameRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,17 +44,17 @@ public class GameService {
         return this.repos.getGamesByLeagueId(leagueId);
     }
 
-    public Game createGame(GameCreateDto gameCreateDto) {
-        Player player = playerService.getPlayerById(gameCreateDto.getPlayerId());
-        Team team = teamService.getTeamById(gameCreateDto.getTeamId());
-        League league = leagueService.getLeagueById(gameCreateDto.getLeagueId());
+    public Game createGame(GameRequestDto gameRequestDto) {
+        Player player = playerService.getPlayerById(gameRequestDto.getPlayerId());
+        Team team = teamService.getTeamById(gameRequestDto.getTeamId());
+        League league = leagueService.getLeagueById(gameRequestDto.getLeagueId());
 
-        Game game = GameMapper.toCreateEntity(gameCreateDto, player, team, league);
+        Game game = GameMapper.toEntity(gameRequestDto, player, team, league);
         return this.repos.save(game);
     }
 
-    public List<Game> createMultipleGames(List<GameCreateDto> gameCreateDtos) {
-        return gameCreateDtos
+    public List<Game> createMultipleGames(List<GameRequestDto> gameRequestDtos) {
+        return gameRequestDtos
                 .stream()
                 .map(this::createGame)
                 .collect(Collectors.toList());
@@ -68,5 +66,15 @@ public class GameService {
             return true;
         } else
             return false;
+    }
+
+    public Game updateGameById(long id, GameRequestDto gameRequestDto) {
+        Game game = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("Game " + id + " not found"));
+        Player player = playerService.getPlayerById(gameRequestDto.getPlayerId());
+        Team team = teamService.getTeamById(gameRequestDto.getTeamId());
+        League league = leagueService.getLeagueById(gameRequestDto.getLeagueId());
+        GameMapper.updateEntity(game, gameRequestDto, player, team, league);
+
+        return repos.save(game);
     }
 }

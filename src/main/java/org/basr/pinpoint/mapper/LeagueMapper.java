@@ -46,10 +46,10 @@ public class LeagueMapper {
         );
     }
 
-    public static void updateEntity(League league, LeagueRequestDto dto) {
-        league.setLeagueName(dto.getLeagueName());
-        league.setLeagueDivision(dto.getLeagueDivision());
-        league.setLeagueDay(dto.getLeagueDay());
+    public static void updateEntity(League league, LeagueRequestDto leagueRequestdto) {
+        league.setLeagueName(leagueRequestdto.getLeagueName());
+        league.setLeagueDivision(leagueRequestdto.getLeagueDivision());
+        league.setLeagueDay(leagueRequestdto.getLeagueDay());
     }
 
     public static List<LeaguePlayerInfoDto> toLeaguePlayerInfoDtoList(Set<Player> players) {

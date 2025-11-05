@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameCreateDto {
+public class GameRequestDto {
     @NotNull
     @PastOrPresent
     private LocalDate datePlayed;

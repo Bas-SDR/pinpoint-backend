@@ -60,7 +60,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TeamResponseDto> updateTeam(@PathVariable Long id, @RequestBody TeamRequestDto teamRequestDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+    public ResponseEntity<TeamResponseDto> updateTeam(@Valid @PathVariable Long id, @RequestBody TeamRequestDto teamRequestDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
 
         Team team = service.getTeamById(id);
 
@@ -77,7 +77,7 @@ public class TeamController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TeamResponseDto> updatePartialTeam(@PathVariable Long id, @RequestBody TeamPatchDto teamPatchDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+    public ResponseEntity<TeamResponseDto> updatePartialTeam(@Valid @PathVariable Long id, @RequestBody TeamPatchDto teamPatchDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
 
         Team team = service.getTeamById(id);
 

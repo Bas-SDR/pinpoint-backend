@@ -45,9 +45,9 @@ public class GameController {
     }
 
     @PostMapping
-    public ResponseEntity<GameFullResponseDto> createGame(@Valid @RequestBody GameCreateDto gameCreateDto) {
+    public ResponseEntity<GameFullResponseDto> createGame(@Valid @RequestBody GameRequestDto gameRequestDto) {
 
-        Game game = this.service.createGame(gameCreateDto);
+        Game game = this.service.createGame(gameRequestDto);
         GameFullResponseDto gameFullResponseDto = GameMapper.toGameFullResponseDto(game);
 
         URI location = UriHelper.buildUri(game.getId());
@@ -56,9 +56,9 @@ public class GameController {
     }
 
     @PostMapping("/batch")
-    public ResponseEntity<List<GameFullResponseDto>> createMultipleGames(@Valid @RequestBody List<GameCreateDto> gameCreateDtos) {
+    public ResponseEntity<List<GameFullResponseDto>> createMultipleGames(@Valid @RequestBody List<GameRequestDto> gameRequestDtos) {
 
-        List<Game> games = this.service.createMultipleGames(gameCreateDtos);
+        List<Game> games = this.service.createMultipleGames(gameRequestDtos);
         List<GameFullResponseDto> gameFullResponseDtos = games.stream()
                 .map(GameMapper::toGameFullResponseDto)
                 .collect(Collectors.toList());
@@ -74,5 +74,11 @@ public class GameController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<GameFullResponseDto> updateGameById(@Valid @PathVariable Long id, @RequestBody GameRequestDto gameRequestDto) {
+        Game game = service.updateGameById(id, gameRequestDto);
+        return ResponseEntity.ok(GameMapper.toGameFullResponseDto(game));
     }
 }
