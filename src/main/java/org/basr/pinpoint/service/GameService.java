@@ -8,9 +8,12 @@ import org.basr.pinpoint.model.League;
 import org.basr.pinpoint.model.Player;
 import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.repository.GameRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -52,4 +55,18 @@ public class GameService {
         return this.repos.save(game);
     }
 
+    public List<Game> createMultipleGames(List<GameCreateDto> gameCreateDtos) {
+        return gameCreateDtos
+                .stream()
+                .map(this::createGame)
+                .collect(Collectors.toList());
+    }
+
+    public boolean deleteGameById(long id) {
+        if (repos.existsById(id)) {
+            this.repos.deleteById(id);
+            return true;
+        } else
+            return false;
+    }
 }

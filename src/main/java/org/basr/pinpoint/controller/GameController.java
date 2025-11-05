@@ -6,11 +6,13 @@ import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.GameMapper;
 import org.basr.pinpoint.model.Game;
 import org.basr.pinpoint.service.GameService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/games")
@@ -48,8 +50,29 @@ public class GameController {
         Game game = this.service.createGame(gameCreateDto);
         GameFullResponseDto gameFullResponseDto = GameMapper.toGameFullResponseDto(game);
 
-        URI location =  UriHelper.buildUri(game.getId());
+        URI location = UriHelper.buildUri(game.getId());
 
         return ResponseEntity.created(location).body(gameFullResponseDto);
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<List<GameFullResponseDto>> createMultipleGames(@Valid @RequestBody List<GameCreateDto> gameCreateDtos) {
+
+        List<Game> games = this.service.createMultipleGames(gameCreateDtos);
+        List<GameFullResponseDto> gameFullResponseDtos = games.stream()
+                .map(GameMapper::toGameFullResponseDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(gameFullResponseDtos);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGameById(@PathVariable Long id) {
+        var result = service.deleteGameById(id);
+        if (result) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
