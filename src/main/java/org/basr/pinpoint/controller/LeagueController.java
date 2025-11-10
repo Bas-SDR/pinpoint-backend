@@ -75,14 +75,14 @@ public class LeagueController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LeagueResponseDto> updateLeagueById(@Valid @PathVariable Long id, @RequestBody LeagueRequestDto leagueRequestDto){
+    public ResponseEntity<LeagueResponseDto> updateLeagueById(@PathVariable Long id, @Valid @RequestBody LeagueRequestDto leagueRequestDto){
         League league = service.updateLeagueById(id, leagueRequestDto);
 
         return ResponseEntity.ok(LeagueMapper.toResponseDto(league));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<LeagueResponseDto> patchLeagueById(@Valid @PathVariable Long id, @RequestBody LeaguePatchDto leaguePatchDto){
+    public ResponseEntity<LeagueResponseDto> patchLeagueById(@PathVariable Long id, @Valid @RequestBody LeaguePatchDto leaguePatchDto){
         League league = service.patchLeagueById(id, leaguePatchDto);
 
         return ResponseEntity.ok(LeagueMapper.toResponseDto(league));

@@ -27,6 +27,7 @@ public class GameMapper {
         gameFullResponseDto.setId(game.getId());
         gameFullResponseDto.setDatePlayed(game.getDatePlayed());
         gameFullResponseDto.setPinfall(game.getPinfall());
+        gameFullResponseDto.setGameNumber(game.getGameNumber());
         gameFullResponseDto.setLeagueId(game.getLeague().getId());
         gameFullResponseDto.setTeamId(game.getTeam().getId());
         gameFullResponseDto.setPlayerId(game.getLeague().getId());

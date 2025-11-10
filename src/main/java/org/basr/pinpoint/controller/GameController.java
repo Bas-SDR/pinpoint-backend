@@ -77,8 +77,15 @@ public class GameController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GameFullResponseDto> updateGameById(@Valid @PathVariable Long id, @RequestBody GameRequestDto gameRequestDto) {
+    public ResponseEntity<GameFullResponseDto> updateGameById(@PathVariable Long id, @Valid @RequestBody GameRequestDto gameRequestDto) {
         Game game = service.updateGameById(id, gameRequestDto);
+        return ResponseEntity.ok(GameMapper.toGameFullResponseDto(game));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<GameFullResponseDto> patchGameById(@PathVariable Long id, @Valid @RequestBody GamePatchDto gamePatchDto) {
+        Game game = service.patchGameById(id, gamePatchDto);
+
         return ResponseEntity.ok(GameMapper.toGameFullResponseDto(game));
     }
 }
