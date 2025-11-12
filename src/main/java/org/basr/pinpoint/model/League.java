@@ -6,7 +6,9 @@ import org.basr.pinpoint.enums.LeagueDay;
 import org.basr.pinpoint.enums.LeagueDivision;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -37,6 +39,10 @@ public class League {
             inverseJoinColumns = @JoinColumn(name = "team_id")
     )
     private Set<Team> teams = new HashSet<>();
+
+    @OneToMany(mappedBy = "league")
+    @EqualsAndHashCode.Exclude
+    List<Game> games = new ArrayList<>();
 
     public League(String leagueName, LeagueDivision leagueDivision,  LeagueDay leagueDay) {
         this.leagueName = leagueName;

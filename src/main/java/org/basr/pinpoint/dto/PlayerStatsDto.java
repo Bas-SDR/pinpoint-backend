@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayerStatsDto {
-    private int gamesPlayed;
-    private int highestGame;
-    private int highestSeries;
-    private int totalPinfall;
-    private int perfectGames;
-    private double averageScore;
+    private Integer gamesPlayed;
+    private Integer highestGame;
+    private Integer highestSeries;
+    private Integer totalPinfall;
+    private Integer perfectGames;
+    private Double averageScore;
 }

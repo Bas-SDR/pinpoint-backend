@@ -1,5 +1,6 @@
 package org.basr.pinpoint.controller;
 
+import jakarta.validation.Valid;
 import org.basr.pinpoint.dto.*;
 import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.LeagueMapper;
@@ -53,7 +54,7 @@ public class LeagueController {
     }
 
     @PostMapping
-    public ResponseEntity<LeagueResponseDto> createLeague(@RequestBody LeagueRequestDto leagueRequestDto){
+    public ResponseEntity<LeagueResponseDto> createLeague(@Valid @RequestBody LeagueRequestDto leagueRequestDto){
 
         League league = this.service.createLeague(leagueRequestDto);
         LeagueResponseDto leagueResponseDto = LeagueMapper.toResponseDto(league);
@@ -74,14 +75,14 @@ public class LeagueController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LeagueResponseDto> updateLeagueById(@PathVariable Long id, @RequestBody LeagueRequestDto leagueRequestDto){
+    public ResponseEntity<LeagueResponseDto> updateLeagueById(@PathVariable Long id, @Valid @RequestBody LeagueRequestDto leagueRequestDto){
         League league = service.updateLeagueById(id, leagueRequestDto);
 
         return ResponseEntity.ok(LeagueMapper.toResponseDto(league));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<LeagueResponseDto> patchLeagueById(@PathVariable Long id, @RequestBody LeaguePatchDto leaguePatchDto){
+    public ResponseEntity<LeagueResponseDto> patchLeagueById(@PathVariable Long id, @Valid @RequestBody LeaguePatchDto leaguePatchDto){
         League league = service.patchLeagueById(id, leaguePatchDto);
 
         return ResponseEntity.ok(LeagueMapper.toResponseDto(league));

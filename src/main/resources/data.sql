@@ -93,16 +93,36 @@ VALUES (1, 1),
        (10, 8),
        (10, 9);
 
-UPDATE users SET player_id = 1 WHERE id = 1;
-UPDATE users SET player_id = 2 WHERE id = 2;
-UPDATE users SET player_id = 3 WHERE id = 3;
-UPDATE users SET player_id = 4 WHERE id = 4;
-UPDATE users SET player_id = 5 WHERE id = 5;
-UPDATE users SET player_id = 6 WHERE id = 6;
-UPDATE users SET player_id = 7 WHERE id = 7;
-UPDATE users SET player_id = 8 WHERE id = 8;
-UPDATE users SET player_id = 9 WHERE id = 9;
-UPDATE users SET player_id = 10 WHERE id = 10;
+UPDATE users
+SET player_id = 1
+WHERE id = 1;
+UPDATE users
+SET player_id = 2
+WHERE id = 2;
+UPDATE users
+SET player_id = 3
+WHERE id = 3;
+UPDATE users
+SET player_id = 4
+WHERE id = 4;
+UPDATE users
+SET player_id = 5
+WHERE id = 5;
+UPDATE users
+SET player_id = 6
+WHERE id = 6;
+UPDATE users
+SET player_id = 7
+WHERE id = 7;
+UPDATE users
+SET player_id = 8
+WHERE id = 8;
+UPDATE users
+SET player_id = 9
+WHERE id = 9;
+UPDATE users
+SET player_id = 10
+WHERE id = 10;
 
 INSERT INTO leagues (league_name, league_division, league_day, creation_date)
 VALUES ('Monday League', 'A', 'MONDAY', '2023-01-10'),
@@ -149,3 +169,75 @@ VALUES (6, 1),
        (6, 4),
        (6, 3),
        (6, 2);
+
+INSERT INTO games (date_played, created_date, pinfall, game_number, player_id, team_id, league_id)
+VALUES
+-- Player 1 / Team 1 / League 1
+('2025-01-01', '2025-01-02', 198, 1, 1, 1, 1),
+('2025-01-05', '2025-01-06', 212, 2, 1, 1, 1),
+('2025-01-10', '2025-01-12', 205, 3, 1, 1, 1),
+
+-- Player 2 / Team 1 / League 1
+('2025-01-02', '2025-01-03', 185, 1, 2, 1, 1),
+('2025-01-06', '2025-01-07', 200, 2, 2, 1, 1),
+('2025-01-11', '2025-01-12', 215, 3, 2, 1, 1),
+
+-- Player 3 / Team 1 / League 1
+('2025-01-03', '2025-01-04', 220, 1, 3, 1, 1),
+('2025-01-07', '2025-01-08', 210, 2, 3, 1, 1),
+('2025-01-12', '2025-01-13', 225, 3, 3, 1, 1),
+
+-- Player 3 / Team 3 / League 1
+('2025-01-04', '2025-01-05', 205, 1, 3, 3, 1),
+('2025-01-08', '2025-01-09', 215, 2, 3, 3, 1),
+('2025-01-13', '2025-01-14', 210, 3, 3, 3, 1),
+
+-- Player 5 / Team 5 / League 1
+('2025-01-05', '2025-01-06', 198, 1, 5, 5, 1),
+('2025-01-09', '2025-01-10', 205, 2, 5, 5, 1),
+('2025-01-14', '2025-01-15', 212, 3, 5, 5, 1),
+
+-- Player 2 / Team 6 / League 1
+('2025-01-06', '2025-01-07', 195, 1, 2, 6, 1),
+('2025-01-10', '2025-01-11', 205, 2, 2, 6, 1),
+('2025-01-15', '2025-01-16', 198, 3, 2, 6, 1),
+
+-- Player 9 / Team 6 / League 1
+('2025-01-07', '2025-01-08', 208, 1, 9, 6, 1),
+('2025-01-11', '2025-01-12', 222, 2, 9, 6, 1),
+('2025-01-16', '2025-01-17', 230, 3, 9, 6, 1),
+
+-- Player 10 / Team 6 / League 1
+('2025-01-08', '2025-01-09', 192, 1, 10, 6, 1),
+('2025-01-12', '2025-01-13', 210, 2, 10, 6, 1),
+('2025-01-17', '2025-01-18', 218, 3, 10, 6, 1),
+
+-- Player 7 / Team 3 / League 3
+('2025-01-09', '2025-01-10', 207, 1, 7, 3, 3),
+('2025-01-13', '2025-01-14', 220, 2, 7, 3, 3),
+('2025-01-18', '2025-01-19', 195, 3, 7, 3, 3),
+
+-- Player 4 / Team 7 / League 2
+('2025-01-10', '2025-01-11', 210, 1, 4, 7, 2),
+('2025-01-14', '2025-01-15', 218, 2, 4, 7, 2),
+('2025-01-19', '2025-01-20', 195, 3, 4, 7, 2),
+
+-- Player 7 / Team 4 / League 4
+('2025-01-11', '2025-01-12', 203, 1, 7, 4, 4),
+('2025-01-15', '2025-01-16', 216, 2, 7, 4, 4),
+('2025-01-20', '2025-01-21', 198, 3, 7, 4, 4),
+
+-- Player 8 / Team 4 / League 4
+('2025-01-12', '2025-01-13', 190, 1, 8, 4, 4),
+('2025-01-16', '2025-01-17', 212, 2, 8, 4, 4),
+('2025-01-21', '2025-01-22', 225, 3, 8, 4, 4),
+
+-- Player 8 / Team 10 / League 6
+('2025-01-13', '2025-01-14', 203, 1, 8, 10, 6),
+('2025-01-17', '2025-01-18', 221, 2, 8, 10, 6),
+('2025-01-22', '2025-01-23', 210, 3, 8, 10, 6),
+
+-- Player 9 / Team 9 / League 1
+('2025-01-14', '2025-01-15', 200, 1, 9, 9, 1),
+('2025-01-18', '2025-01-19', 215, 2, 9, 9, 1),
+('2025-01-23', '2025-01-24', 225, 3, 9, 9, 1);

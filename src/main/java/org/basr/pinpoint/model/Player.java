@@ -3,7 +3,9 @@ package org.basr.pinpoint.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -29,4 +31,8 @@ public class Player {
     @EqualsAndHashCode.Exclude
     @JoinColumn(name = "stats_id")
     private Stats stats;
+
+    @OneToMany(mappedBy = "player")
+    @EqualsAndHashCode.Exclude
+    private List<Game> games = new ArrayList<>();
 }
