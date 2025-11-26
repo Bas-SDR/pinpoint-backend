@@ -47,12 +47,6 @@ public class UserController {
         return ResponseEntity.ok(UserMapper.toResponseDto(this.service.getSingleUser(id)));
     }
 
-    @GetMapping("/after")
-    public ResponseEntity<List<UserResponseDto>> getAllUsersByAfter(@RequestParam LocalDate date) {
-        return ResponseEntity.ok(UserMapper.toResponseDtoList(this.service.findByDobAfter(date)));
-    }
-    //TODO Add new Admin Dto so dob can be sent as well.
-
     @PutMapping("/{id}")
     @PreAuthorize("#id == authentication.principal.id or hasRole('ADMIN')")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDto userRequestDto) {
