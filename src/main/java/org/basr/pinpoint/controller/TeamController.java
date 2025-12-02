@@ -66,7 +66,7 @@ public class TeamController {
 
         boolean isCaptain = team.getCaptain() != null && team.getCaptain().getId() == principal.getId();
         boolean isAdmin = principal.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ADMIN"));
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         if (!isCaptain && !isAdmin) {
             throw new AccessDeniedException("Only the captain or admin can update the team");

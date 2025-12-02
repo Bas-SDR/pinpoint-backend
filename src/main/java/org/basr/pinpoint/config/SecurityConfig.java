@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig  {
 
     private final JwtService jwtService;
@@ -56,15 +58,26 @@ public class SecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/logout").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/games").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/games/batch").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/games/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH,"/games/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/games/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,  "/teams").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/teams/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,  "/leagues").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,   "/leagues/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/leagues/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/leagues/*").hasRole("ADMIN")
                         .requestMatchers("/roles").hasRole("ADMIN")
-                        .requestMatchers("/users").authenticated()
-                        .requestMatchers("/players").authenticated()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/users").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/auth").permitAll()
+                        .requestMatchers("/users/**").authenticated()
+                        .requestMatchers("/players/**").permitAll()
+                        .requestMatchers("/games/**").permitAll()
+                        .requestMatchers("/teams/**").permitAll()
+                        .requestMatchers("/leagues/**").permitAll()
                         .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
