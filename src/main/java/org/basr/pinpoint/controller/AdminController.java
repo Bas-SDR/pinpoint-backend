@@ -18,22 +18,9 @@ public class AdminController {
 
 
     private final UserService userService;
-//    private final PlayerService playerService;
-//    private final GameService gameService;
-//    private final TeamService teamService;
-//    private final LeagueService leagueService;
 
-    public AdminController(UserService userService
-//            , PlayerService playerService
-//            , GameService gameService
-//            , TeamService teamService
-//            , LeagueService leagueService
-    ) {
+    public AdminController(UserService userService) {
         this.userService = userService;
-//        this.playerService = playerService;
-//        this.gameService = gameService;
-//        this.teamService = teamService;
-//        this.leagueService = leagueService;
     }
 
     @GetMapping("/users/after")
