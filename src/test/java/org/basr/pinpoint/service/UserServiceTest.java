@@ -25,8 +25,8 @@ import static org.mockito.Mockito.when;
 class UserServiceTest {
 
     //Arrange
-    User user1 = new User();
-    User user2 = new User();
+    User user1;
+    User user2;
 
     @Mock
     private UserRepository userRepos;
@@ -67,10 +67,10 @@ class UserServiceTest {
 
         User savedUser = new User();
         ReflectionTestUtils.setField(savedUser, "id", 3L);
-        savedUser.setFirstName("Annie");
-        savedUser.setLastName("Aardbei");
-        savedUser.setEmail("annie@email.com");
-        savedUser.setPassword("password3");
+        savedUser.setFirstName(newUserDto.getFirstName());
+        savedUser.setLastName(newUserDto.getLastName());
+        savedUser.setEmail(newUserDto.getEmail());
+        savedUser.setPassword(newUserDto.getPassword());
 
         //https://stackoverflow.com/questions/51247796/how-to-mock-jpa-repositorys-save-method-in-unit-tests
         when(userRepos.save(Mockito.any(User.class))).thenReturn(savedUser);
