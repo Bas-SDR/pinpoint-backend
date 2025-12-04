@@ -1,6 +1,9 @@
 package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.TeamCreateDto;
+import org.basr.pinpoint.dto.TeamPatchDto;
+import org.basr.pinpoint.dto.TeamRequestDto;
+import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.TeamRepository;
@@ -124,36 +127,196 @@ class TeamServiceTest {
         Team team = teamService.getTeamById(1L);
         //Assert
         assertEquals(1L, team.getId());
-
     }
 
     @Test
-    void deleteTeam() {
+    void shouldNotGetTeamById() {
         //Arrange
-
+        when(teamRepos.findById(1000L)).thenReturn(Optional.empty());
         //Act
-
         //Assert
-
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            teamService.getTeamById(1000L);
+        });
+        assertEquals("Team 1000 not found", ex.getMessage());
     }
 
     @Test
-    void updateTeam() {
+    void shouldDeleteTeam() {
         //Arrange
-
+        when(teamRepos.existsById(1L)).thenReturn(true);
         //Act
-
+        boolean deletedTeam = teamService.deleteTeam(1L);
         //Assert
-
+        assertTrue(deletedTeam);
     }
 
     @Test
-    void patchTeam() {
+    void shouldNotFindTeamToDelete() {
         //Arrange
+        when(teamRepos.existsById(100L)).thenReturn(false);
+        //Act
+        boolean deletedTeam = teamService.deleteTeam(100L);
+        //Assert
+        assertFalse(deletedTeam);
+    }
+
+    @Test
+    void shouldUpdateTeamWithCaptain() {
+        //Arrange
+        TeamRequestDto teamRequestDto = new TeamRequestDto();
+        teamRequestDto.setTeamName("NewTeam1");
+        teamRequestDto.setCaptainId(3L);
+        teamRequestDto.setTeamPic("team1Pic");
+
+        User captain = new User();
+        ReflectionTestUtils.setField(captain, "id", 3L);
+        captain.setFirstName("Captain");
+        captain.setLastName("Leader");
+
+        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
+        when(teamRepos.save(team1)).thenReturn(team1);
+        when(userService.getSingleUser(3L)).thenReturn(captain);
+        //Act
+        Team updatedTeam = teamService.updateTeam(1L, teamRequestDto);
+        //Assert
+        assertNotNull(updatedTeam);
+        assertEquals("NewTeam1", updatedTeam.getTeamName());
+        assertEquals(3L, updatedTeam.getCaptain().getId());
+        assertEquals("Captain", updatedTeam.getCaptain().getFirstName());
+        assertEquals("Leader", updatedTeam.getCaptain().getLastName());
+        assertEquals("team1Pic", updatedTeam.getTeamPic());
+    }
+
+    @Test
+    void shouldUpdateTeamWithoutCaptain() {
+        //Arrange
+        TeamRequestDto teamRequestDto = new TeamRequestDto();
+        teamRequestDto.setTeamName("NewTeam1");
+        teamRequestDto.setTeamPic("team1Pic");
+
+        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
+        when(teamRepos.save(team1)).thenReturn(team1);
+        //Act
+        Team updatedTeam = teamService.updateTeam(1L, teamRequestDto);
+        //Assert
+        assertNotNull(updatedTeam);
+        assertEquals("NewTeam1", updatedTeam.getTeamName());
+        assertEquals("team1Pic", updatedTeam.getTeamPic());
+        assertNull(updatedTeam.getCaptain());
+    }
+
+    @Test
+    void shouldNotFindTeamToUpdate() {
+        //Arrange
+        TeamRequestDto teamRequestDto = new TeamRequestDto();
+        teamRequestDto.setTeamName("NewTeam1");
+        teamRequestDto.setCaptainId(3L);
+        teamRequestDto.setTeamPic("team1Pic");
+
+        when(teamRepos.findById(1000L)).thenReturn(Optional.empty());
+        //Act
+        //Assert
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            teamService.updateTeam(1000L, teamRequestDto);
+        });
+        assertEquals("Team 1000 not found", ex.getMessage());
+    }
+
+    @Test
+    void shouldOnlyUpdateTeamName() {
+        //Arrange
+        TeamPatchDto newTeamInfo =  new TeamPatchDto();
+        newTeamInfo.setTeamName("NewTeam1");
+
+        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
+        when(teamRepos.save(team1)).thenReturn(team1);
 
         //Act
-
+        Team updatedTeam = teamService.patchTeam(1L, newTeamInfo);
         //Assert
+        assertEquals("NewTeam1", updatedTeam.getTeamName());
+        assertEquals(LocalDate.of(2022,11,5), updatedTeam.getCreationDate());
+        assertNull(updatedTeam.getTeamPic());
+        assertNull(updatedTeam.getCaptain());
+    }
 
+    @Test
+    void shouldOnlyUpdateCaptainId() {
+        //Arrange
+        TeamPatchDto newTeamInfo =  new TeamPatchDto();
+        newTeamInfo.setCaptainId(3L);
+
+        User captain = new User();
+        ReflectionTestUtils.setField(captain, "id", 3L);
+        captain.setFirstName("Captain");
+        captain.setLastName("Leader");
+
+        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
+        when(teamRepos.save(team1)).thenReturn(team1);
+        when(userService.getSingleUser(3L)).thenReturn(captain);
+        //Act
+        Team updatedTeam = teamService.patchTeam(1L, newTeamInfo);
+        //Assert
+        assertEquals("team1", updatedTeam.getTeamName());
+        assertEquals(LocalDate.of(2022,11,5), updatedTeam.getCreationDate());
+        assertNull(updatedTeam.getTeamPic());
+        assertEquals(updatedTeam.getCaptain(), captain);
+        assertEquals(3L, updatedTeam.getCaptain().getId());
+        assertEquals("Captain", updatedTeam.getCaptain().getFirstName());
+        assertEquals("Leader", updatedTeam.getCaptain().getLastName());
+    }
+
+    @Test
+    void shouldOnlyUpdateTeamPic() {
+        //Arrange
+        TeamPatchDto newTeamInfo =  new TeamPatchDto();
+        newTeamInfo.setTeamPic("NewTeamPic1");
+
+        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
+        when(teamRepos.save(team1)).thenReturn(team1);
+
+        //Act
+        Team updatedTeam = teamService.patchTeam(1L, newTeamInfo);
+        //Assert
+        assertEquals("team1", updatedTeam.getTeamName());
+        assertEquals(LocalDate.of(2022,11,5), updatedTeam.getCreationDate());
+        assertEquals("NewTeamPic1", updatedTeam.getTeamPic());
+        assertNull(updatedTeam.getCaptain());
+    }
+
+    @Test
+    void shouldOnlyUpdateTeamNameAndTeamPic() {
+        //Arrange
+        TeamPatchDto newTeamInfo =  new TeamPatchDto();
+        newTeamInfo.setTeamName("NewTeam1");
+        newTeamInfo.setTeamPic("NewTeamPic1");
+
+        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
+        when(teamRepos.save(team1)).thenReturn(team1);
+
+        //Act
+        Team updatedTeam = teamService.patchTeam(1L, newTeamInfo);
+        //Assert
+        assertEquals("NewTeam1", updatedTeam.getTeamName());
+        assertEquals(LocalDate.of(2022,11,5), updatedTeam.getCreationDate());
+        assertEquals("NewTeamPic1", updatedTeam.getTeamPic());
+        assertNull(updatedTeam.getCaptain());
+    }
+
+    @Test
+    void shouldNotFindTeamToPatch() {
+        //Arrange
+        TeamPatchDto newTeamInfo =  new TeamPatchDto();
+        newTeamInfo.setTeamName("NewTeam1");
+        newTeamInfo.setTeamPic("NewTeamPic1");
+
+        when(teamRepos.findById(1000L)).thenReturn(Optional.empty());
+        //Act
+        //Assert
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            teamService.patchTeam(1000L, newTeamInfo);
+        });
+        assertEquals("Team 1000 not found", ex.getMessage());
     }
 }
