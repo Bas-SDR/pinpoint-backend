@@ -13,6 +13,7 @@ import org.basr.pinpoint.service.TeamService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.nio.file.AccessDeniedException;
@@ -92,5 +93,11 @@ public class TeamController {
         TeamResponseDto teamResponseDto = TeamMapper.toResponseDto(service.patchTeam(id, teamPatchDto));
 
         return ResponseEntity.ok(teamResponseDto);
+    }
+
+    @PostMapping("/{id}/team-pic")
+    public ResponseEntity<String> uploadTeamPic(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        String imageUrl = service.uploadTeamPicture(id, file);
+        return ResponseEntity.ok(imageUrl);
     }
 }

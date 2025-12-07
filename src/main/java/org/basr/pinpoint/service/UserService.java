@@ -58,8 +58,8 @@ public class UserService {
     public String uploadProfilePicture(Long userId, MultipartFile file) {
         User user = repos.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        String imageName = file.getOriginalFilename();
-        Path path = Paths.get("uploads/" + imageName);
+        String imageName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        Path path = Paths.get("uploads/profilepic" + imageName);
 
         try {
             Files.createDirectories(path.getParent());

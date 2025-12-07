@@ -9,7 +9,12 @@ import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.TeamRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,5 +89,25 @@ public class TeamService {
         }
 
         return repos.save(team);
+    }
+
+    public String uploadTeamPicture(Long teamId, MultipartFile file) {
+        Team team = repos.findById(teamId).orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+
+        String imageName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        Path path = Paths.get("uploads/teampic" + imageName);
+
+        try {
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Image upload failed");
+        }
+
+        String imageUrl = "/images/teampic/" + imageName;
+        team.setTeamPic(imageUrl);
+        repos.save(team);
+
+        return imageUrl;
     }
 }
