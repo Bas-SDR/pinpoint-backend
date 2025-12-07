@@ -4,6 +4,7 @@ import org.basr.pinpoint.dto.TeamCreateDto;
 import org.basr.pinpoint.dto.TeamPatchDto;
 import org.basr.pinpoint.dto.TeamRequestDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
+import org.basr.pinpoint.helper.FileStorage;
 import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.TeamRepository;
@@ -15,13 +16,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,6 +43,9 @@ class TeamServiceTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    FileStorage fileStorage;
 
     @InjectMocks
     TeamService teamService;
@@ -167,7 +174,6 @@ class TeamServiceTest {
         TeamRequestDto teamRequestDto = new TeamRequestDto();
         teamRequestDto.setTeamName("NewTeam1");
         teamRequestDto.setCaptainId(3L);
-        teamRequestDto.setTeamPic("team1Pic");
 
         User captain = new User();
         ReflectionTestUtils.setField(captain, "id", 3L);
@@ -185,7 +191,6 @@ class TeamServiceTest {
         assertEquals(3L, updatedTeam.getCaptain().getId());
         assertEquals("Captain", updatedTeam.getCaptain().getFirstName());
         assertEquals("Leader", updatedTeam.getCaptain().getLastName());
-        assertEquals("team1Pic", updatedTeam.getTeamPic());
     }
 
     @Test
@@ -193,7 +198,6 @@ class TeamServiceTest {
         //Arrange
         TeamRequestDto teamRequestDto = new TeamRequestDto();
         teamRequestDto.setTeamName("NewTeam1");
-        teamRequestDto.setTeamPic("team1Pic");
 
         when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
         when(teamRepos.save(team1)).thenReturn(team1);
@@ -202,7 +206,6 @@ class TeamServiceTest {
         //Assert
         assertNotNull(updatedTeam);
         assertEquals("NewTeam1", updatedTeam.getTeamName());
-        assertEquals("team1Pic", updatedTeam.getTeamPic());
         assertNull(updatedTeam.getCaptain());
     }
 
@@ -212,7 +215,6 @@ class TeamServiceTest {
         TeamRequestDto teamRequestDto = new TeamRequestDto();
         teamRequestDto.setTeamName("NewTeam1");
         teamRequestDto.setCaptainId(3L);
-        teamRequestDto.setTeamPic("team1Pic");
 
         when(teamRepos.findById(1000L)).thenReturn(Optional.empty());
         //Act
@@ -268,48 +270,10 @@ class TeamServiceTest {
     }
 
     @Test
-    void shouldOnlyUpdateTeamPic() {
-        //Arrange
-        TeamPatchDto newTeamInfo =  new TeamPatchDto();
-        newTeamInfo.setTeamPic("NewTeamPic1");
-
-        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
-        when(teamRepos.save(team1)).thenReturn(team1);
-
-        //Act
-        Team updatedTeam = teamService.patchTeam(1L, newTeamInfo);
-        //Assert
-        assertEquals("team1", updatedTeam.getTeamName());
-        assertEquals(LocalDate.of(2022,11,5), updatedTeam.getCreationDate());
-        assertEquals("NewTeamPic1", updatedTeam.getTeamPic());
-        assertNull(updatedTeam.getCaptain());
-    }
-
-    @Test
-    void shouldOnlyUpdateTeamNameAndTeamPic() {
-        //Arrange
-        TeamPatchDto newTeamInfo =  new TeamPatchDto();
-        newTeamInfo.setTeamName("NewTeam1");
-        newTeamInfo.setTeamPic("NewTeamPic1");
-
-        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
-        when(teamRepos.save(team1)).thenReturn(team1);
-
-        //Act
-        Team updatedTeam = teamService.patchTeam(1L, newTeamInfo);
-        //Assert
-        assertEquals("NewTeam1", updatedTeam.getTeamName());
-        assertEquals(LocalDate.of(2022,11,5), updatedTeam.getCreationDate());
-        assertEquals("NewTeamPic1", updatedTeam.getTeamPic());
-        assertNull(updatedTeam.getCaptain());
-    }
-
-    @Test
     void shouldNotFindTeamToPatch() {
         //Arrange
         TeamPatchDto newTeamInfo =  new TeamPatchDto();
         newTeamInfo.setTeamName("NewTeam1");
-        newTeamInfo.setTeamPic("NewTeamPic1");
 
         when(teamRepos.findById(1000L)).thenReturn(Optional.empty());
         //Act
@@ -318,5 +282,59 @@ class TeamServiceTest {
             teamService.patchTeam(1000L, newTeamInfo);
         });
         assertEquals("Team 1000 not found", ex.getMessage());
+    }
+
+    @Test
+    void shouldUploadTeamPicture() throws IOException {
+        // Arrange
+        MultipartFile file = Mockito.mock(MultipartFile.class);
+        when(file.getOriginalFilename()).thenReturn("teamLogo.png");
+        when(file.getBytes()).thenReturn(new byte[]{1, 2, 3});
+
+        when(teamRepos.findById(team1.getId())).thenReturn(Optional.of(team1));
+        when(teamRepos.save(team1)).thenReturn(team1);
+
+        // Act
+        String url = teamService.uploadTeamPicture(team1.getId(), file);
+
+        // Assert
+        assertTrue(url.startsWith("/images/teampic/"));
+        assertTrue(url.endsWith("_teamLogo.png"));
+        assertEquals(url, team1.getTeamPic());
+    }
+
+    @Test
+    void shouldNotFindTeamForUpload() {
+        // Arrange
+        MultipartFile file = Mockito.mock(MultipartFile.class);
+
+        when(teamRepos.findById(1000L)).thenReturn(Optional.empty());
+        //Act
+        //Assert
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            teamService.uploadTeamPicture(1000L, file);
+        });
+        assertEquals("Team 1000 not found", ex.getMessage());
+
+        // Assert
+    }
+
+    @Test
+    void shouldNotUploadTeamPicture() throws IOException {
+        MultipartFile file = Mockito.mock(MultipartFile.class);
+        when(file.getOriginalFilename()).thenReturn("teamLogo.png");
+        when(file.getBytes()).thenReturn(new byte[]{1,2,3});
+
+        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
+
+        Mockito.doThrow(new IOException("Test")).when(fileStorage).writeFile(Mockito.any(), Mockito.any());
+
+        //Act
+        //Assert
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            teamService.uploadTeamPicture(1L, file);
+        });
+
+        assertEquals("Image upload failed", ex.getMessage());
     }
 }

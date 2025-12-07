@@ -2,6 +2,7 @@ package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.UserRequestDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
+import org.basr.pinpoint.helper.FileStorage;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +36,9 @@ class UserServiceTest {
 
     @Mock
     private RoleService roleService;
+
+    @Mock
+    private FileStorage fileStorage;
 
     @InjectMocks
     private UserService userService;
@@ -190,5 +196,59 @@ class UserServiceTest {
         assertEquals(LocalDate.of(2000, 8, 1), users.get(0).getDob());
         assertEquals("Firstname2", users.get(1).getFirstName());
         assertEquals(LocalDate.of(1990, 5, 23), users.get(1).getDob());
+    }
+
+    @Test
+    void shouldUploadProfilePicture() throws IOException {
+        // Arrange
+        MultipartFile file = Mockito.mock(MultipartFile.class);
+        when(file.getOriginalFilename()).thenReturn("profilePic.png");
+        when(file.getBytes()).thenReturn(new byte[]{1, 2, 3});
+
+        when(userRepos.findById(user1.getId())).thenReturn(Optional.of(user1));
+        when(userRepos.save(user1)).thenReturn(user1);
+
+        // Act
+        String url = userService.uploadProfilePicture(user1.getId(), file);
+
+        // Assert
+        assertTrue(url.startsWith("/images/profilepic/"));
+        assertTrue(url.endsWith("_profilePic.png"));
+        assertEquals(url, user1.getProfilePic());
+    }
+
+    @Test
+    void shouldNotFindUserForUpload() {
+        // Arrange
+        MultipartFile file = Mockito.mock(MultipartFile.class);
+
+        when(userRepos.findById(1000L)).thenReturn(Optional.empty());
+        //Act
+        //Assert
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            userService.uploadProfilePicture(1000L, file);
+        });
+        assertEquals("User 1000 not found", ex.getMessage());
+
+        // Assert
+    }
+
+    @Test
+    void shouldNotUploadProfilePicture() throws IOException {
+        MultipartFile file = Mockito.mock(MultipartFile.class);
+        when(file.getOriginalFilename()).thenReturn("profilePic.png");
+        when(file.getBytes()).thenReturn(new byte[]{1,2,3});
+
+        when(userRepos.findById(1L)).thenReturn(Optional.of(user1));
+
+        Mockito.doThrow(new IOException("Test")).when(fileStorage).writeFile(Mockito.any(), Mockito.any());
+
+        //Act
+        //Assert
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            userService.uploadProfilePicture(1L, file);
+        });
+
+        assertEquals("Image upload failed", ex.getMessage());
     }
 }
