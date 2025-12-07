@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig  {
+public class SecurityConfig {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -59,21 +59,22 @@ public class SecurityConfig  {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST,"/games").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST,"/games/batch").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,"/games/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH,"/games/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/games/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST,  "/teams").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/teams/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST,  "/leagues").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,   "/leagues/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/games").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/games/batch").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/games/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/games/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/games/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/teams").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/teams/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/leagues").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/leagues/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/leagues/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/leagues/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/leagues/*").hasRole("ADMIN")
                         .requestMatchers("/roles").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST,"/users").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/auth").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth").permitAll()
                         .requestMatchers("/users/**").authenticated()
+                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/players/**").permitAll()
                         .requestMatchers("/games/**").permitAll()
                         .requestMatchers("/teams/**").permitAll()

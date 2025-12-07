@@ -10,6 +10,7 @@ import org.basr.pinpoint.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -52,6 +53,13 @@ public class UserController {
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDto userRequestDto) {
         User updatedUser = service.updateUser(id, userRequestDto);
         return ResponseEntity.ok(UserMapper.toResponseDto(updatedUser));
+    }
+
+    //https://stackabuse.com/uploading-files-with-spring-boot/
+    @PostMapping("/{id}/profile-pic")
+    public ResponseEntity<String> uploadProfilePic(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        String imageUrl = service.uploadProfilePicture(id, file);
+        return ResponseEntity.ok(imageUrl);
     }
 }
 

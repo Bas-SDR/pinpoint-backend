@@ -7,7 +7,12 @@ import org.basr.pinpoint.mapper.UserMapper;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -50,4 +55,23 @@ public class UserService {
         return this.repos.findByDobAfter(date);
     }
 
+    public String uploadProfilePicture(Long userId, MultipartFile file) {
+        User user = repos.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        String imageName = file.getOriginalFilename();
+        Path path = Paths.get("uploads/" + imageName);
+
+        try {
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Image upload failed");
+        }
+
+        String imageUrl = "/images/profilepic/" + imageName;
+        user.setProfilePic(imageUrl);
+        repos.save(user);
+
+        return imageUrl;
+    }
 }

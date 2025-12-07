@@ -35,6 +35,7 @@ public class UserMapper {
         userResponseDto.setId(user.getId());
         userResponseDto.setFirstName(user.getFirstName());
         userResponseDto.setLastName(user.getLastName());
+        userResponseDto.setProfilePicture(user.getProfilePic());
         return userResponseDto;
     }
 
