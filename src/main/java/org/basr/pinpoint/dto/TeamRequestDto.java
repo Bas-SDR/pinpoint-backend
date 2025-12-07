@@ -16,5 +16,4 @@ public class TeamRequestDto {
     private String teamName;
     @NotNull
     private Long captainId;
-    private String teamPic;
 }

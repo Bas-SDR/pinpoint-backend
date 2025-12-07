@@ -12,5 +12,4 @@ public class TeamPatchDto {
     @Size(min = 1, max = 20)
     private String teamName;
     private Long captainId;
-    private String teamPic;
 }

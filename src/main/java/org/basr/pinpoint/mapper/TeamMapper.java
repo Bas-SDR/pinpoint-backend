@@ -11,8 +11,7 @@ import java.util.stream.Collectors;
 public class TeamMapper {
     public static Team toEntity(TeamRequestDto teamRequestDto) {
         Team team = new Team(
-                teamRequestDto.getTeamName(),
-                teamRequestDto.getTeamPic());
+                teamRequestDto.getTeamName());
         return team;
     }
 
@@ -40,6 +39,5 @@ public class TeamMapper {
 
     public static void updateEntity(Team team, TeamRequestDto teamRequestDto) {
         team.setTeamName(teamRequestDto.getTeamName());
-        team.setTeamPic(teamRequestDto.getTeamPic());
     }
 }

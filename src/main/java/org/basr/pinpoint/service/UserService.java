@@ -2,6 +2,7 @@ package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.UserRequestDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
+import org.basr.pinpoint.helper.FileStorage;
 import org.basr.pinpoint.helper.PasswordHelper;
 import org.basr.pinpoint.mapper.UserMapper;
 import org.basr.pinpoint.model.User;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -21,10 +21,12 @@ public class UserService {
 
     private final UserRepository repos;
     private final RoleService roleService;
+    private final FileStorage fileStorage;
 
-    public UserService(UserRepository repos, RoleService roleService) {
+    public UserService(UserRepository repos, RoleService roleService,  FileStorage fileStorage) {
         this.repos = repos;
         this.roleService = roleService;
+        this.fileStorage = fileStorage;
     }
 
     public User createUser(UserRequestDto userRequestDto) {
@@ -55,15 +57,14 @@ public class UserService {
         return this.repos.findByDobAfter(date);
     }
 
-    public String uploadProfilePicture(Long userId, MultipartFile file) {
-        User user = repos.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    public String uploadProfilePicture(Long id, MultipartFile file) {
+        User user = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
 
         String imageName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         Path path = Paths.get("uploads/profilepic" + imageName);
 
         try {
-            Files.createDirectories(path.getParent());
-            Files.write(path, file.getBytes());
+            fileStorage.writeFile(path, file.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Image upload failed");
         }

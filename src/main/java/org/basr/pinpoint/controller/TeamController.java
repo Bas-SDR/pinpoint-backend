@@ -61,7 +61,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TeamResponseDto> updateTeam(@PathVariable Long id, @Valid @RequestBody TeamRequestDto teamRequestDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+    public ResponseEntity<TeamResponseDto> updateTeam(@PathVariable Long id, @RequestPart(required = false) MultipartFile teamPic, @Valid @RequestBody TeamRequestDto teamRequestDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
 
         Team team = service.getTeamById(id);
 
@@ -73,12 +73,16 @@ public class TeamController {
             throw new AccessDeniedException("Only the captain or admin can update the team");
         }
 
+        if (teamPic != null) {
+            service.uploadTeamPicture(id, teamPic);
+        }
+
         Team updated = service.updateTeam(id, teamRequestDto);
         return ResponseEntity.ok(TeamMapper.toResponseDto(updated));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TeamResponseDto> updatePartialTeam(@PathVariable Long id, @Valid @RequestBody TeamPatchDto teamPatchDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+    public ResponseEntity<TeamResponseDto> updatePartialTeam(@PathVariable Long id, @RequestPart(required = false) MultipartFile teamPic, @Valid @RequestPart(required = false) TeamPatchDto teamPatchDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
 
         Team team = service.getTeamById(id);
 
@@ -90,7 +94,15 @@ public class TeamController {
             throw new AccessDeniedException("Only the captain or admin can update the team");
         }
 
-        TeamResponseDto teamResponseDto = TeamMapper.toResponseDto(service.patchTeam(id, teamPatchDto));
+        if (teamPic != null) {
+            service.uploadTeamPicture(id, teamPic);
+        }
+
+        if (teamPatchDto != null) {
+            service.patchTeam(id, teamPatchDto);
+        }
+
+        TeamResponseDto teamResponseDto = TeamMapper.toResponseDto(service.getTeamById(id));
 
         return ResponseEntity.ok(teamResponseDto);
     }

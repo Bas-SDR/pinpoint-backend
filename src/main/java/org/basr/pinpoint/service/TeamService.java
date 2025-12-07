@@ -4,6 +4,7 @@ import org.basr.pinpoint.dto.TeamCreateDto;
 import org.basr.pinpoint.dto.TeamRequestDto;
 import org.basr.pinpoint.dto.TeamPatchDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
+import org.basr.pinpoint.helper.FileStorage;
 import org.basr.pinpoint.mapper.TeamMapper;
 import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.model.User;
@@ -24,11 +25,13 @@ public class TeamService {
     private final TeamRepository repos;
     private final RoleService roleService;
     private final UserService userService;
+    private final FileStorage fileStorage;
 
-    public TeamService(TeamRepository repos, RoleService roleService, UserService userService) {
+    public TeamService(TeamRepository repos, RoleService roleService, UserService userService, FileStorage fileStorage) {
         this.repos = repos;
         this.roleService = roleService;
         this.userService = userService;
+        this.fileStorage = fileStorage;
     }
 
     public Team createTeam(TeamCreateDto teamCreateDto) {
@@ -79,10 +82,6 @@ public class TeamService {
             team.setTeamName(updatedTeam.getTeamName());
         }
 
-        if (updatedTeam.getTeamPic() != null) {
-            team.setTeamPic(updatedTeam.getTeamPic());
-        }
-
         if (updatedTeam.getCaptainId() != null) {
             User captain = userService.getSingleUser(updatedTeam.getCaptainId());
             team.setCaptain(captain);
@@ -91,15 +90,14 @@ public class TeamService {
         return repos.save(team);
     }
 
-    public String uploadTeamPicture(Long teamId, MultipartFile file) {
-        Team team = repos.findById(teamId).orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+    public String uploadTeamPicture(Long id, MultipartFile file) {
+        Team team = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("Team " + id + " not found"));
 
         String imageName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        Path path = Paths.get("uploads/teampic" + imageName);
+        Path path = Paths.get("uploads/teampic/" + imageName);
 
         try {
-            Files.createDirectories(path.getParent());
-            Files.write(path, file.getBytes());
+            fileStorage.writeFile(path, file.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Image upload failed");
         }
@@ -109,5 +107,6 @@ public class TeamService {
         repos.save(team);
 
         return imageUrl;
+
     }
 }
