@@ -5,6 +5,7 @@ import org.basr.pinpoint.dto.TeamCreateDto;
 import org.basr.pinpoint.dto.TeamPatchDto;
 import org.basr.pinpoint.dto.TeamRequestDto;
 import org.basr.pinpoint.dto.TeamResponseDto;
+import org.basr.pinpoint.helper.TeamAuthorizationHelper;
 import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.TeamMapper;
 import org.basr.pinpoint.model.Team;
@@ -24,9 +25,11 @@ import java.util.List;
 public class TeamController {
 
     private final TeamService service;
+    private final TeamAuthorizationHelper authHelper;
 
     public TeamController(TeamService service) {
         this.service = service;
+        this.authHelper = new TeamAuthorizationHelper();
     }
 
     @PostMapping
@@ -64,14 +67,7 @@ public class TeamController {
     public ResponseEntity<TeamResponseDto> updateTeam(@PathVariable Long id, @RequestPart(required = false) MultipartFile teamPic, @Valid @RequestBody TeamRequestDto teamRequestDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
 
         Team team = service.getTeamById(id);
-
-        boolean isCaptain = team.getCaptain() != null && team.getCaptain().getId() == principal.getId();
-        boolean isAdmin = principal.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isCaptain && !isAdmin) {
-            throw new AccessDeniedException("Only the captain or admin can update the team");
-        }
+        authHelper.checkCaptainOrAdmin(team, principal);
 
         if (teamPic != null) {
             service.uploadTeamPicture(id, teamPic);
@@ -85,14 +81,7 @@ public class TeamController {
     public ResponseEntity<TeamResponseDto> updatePartialTeam(@PathVariable Long id, @RequestPart(required = false) MultipartFile teamPic, @Valid @RequestPart(required = false) TeamPatchDto teamPatchDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
 
         Team team = service.getTeamById(id);
-
-        boolean isCaptain = team.getCaptain() != null && team.getCaptain().getId() == principal.getId();
-        boolean isAdmin = principal.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ADMIN"));
-
-        if (!isCaptain && !isAdmin) {
-            throw new AccessDeniedException("Only the captain or admin can update the team");
-        }
+        authHelper.checkCaptainOrAdmin(team, principal);
 
         if (teamPic != null) {
             service.uploadTeamPicture(id, teamPic);
@@ -108,7 +97,10 @@ public class TeamController {
     }
 
     @PostMapping("/{id}/team-pic")
-    public ResponseEntity<String> uploadTeamPic(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadTeamPic(@PathVariable Long id, @RequestParam("file") MultipartFile file, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+        Team team = service.getTeamById(id);
+        authHelper.checkCaptainOrAdmin(team, principal);
+
         String imageUrl = service.uploadTeamPicture(id, file);
         return ResponseEntity.ok(imageUrl);
     }
