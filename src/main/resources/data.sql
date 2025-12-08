@@ -16,24 +16,24 @@ FROM player_stats
 ORDER BY id;
 
 INSERT INTO users(first_name, last_name, email, phone, dob, profile_pic, password)
-VALUES ('Alice', 'Johnson', 'user@example.com', '9876543210', '1992-05-14', 'https://pics.example.com/alice.jpg',
+VALUES ('Alice', 'Johnson', 'user@example.com', '9876543210', '1992-05-14', '/images/profilepic/1765205777270_1.svg',
         '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
-       ('Brian', 'Miller', 'admin@example.com', '+12345678901', NULL, NULL,
+       ('Brian', 'Miller', 'admin@example.com', '+12345678901', NULL, '/images/profilepic/1765205786211_2.svg',
         '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
        ('Catherine', 'Lopez', 'catherine.lopez@example.com', '8765432109', '1988-11-02',
-        'https://pics.example.com/catherine.png', '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
-       ('David', 'Kim', 'david.kim@example.com', '7654321098', NULL, NULL,
+        '/images/profilepic/1765205791686_3.svg', '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
+       ('David', 'Kim', 'david.kim@example.com', '7654321098', NULL, '/images/profilepic/1765205795959_4.svg',
         '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
-       ('Emma', 'Brown', 'emma.brown@example.com', '+19876543210', '1995-07-21', 'https://pics.example.com/emma.jpg',
+       ('Emma', 'Brown', 'emma.brown@example.com', '+19876543210', '1995-07-21', '/images/profilepic/1765205804418_5.svg',
         '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
-       ('Frank', 'Nguyen', 'frank.nguyen@example.com', '6543210987', NULL, NULL,
+       ('Frank', 'Nguyen', 'frank.nguyen@example.com', '6543210987', NULL, '/images/profilepic/1765205808859_6.svg',
         '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
-       ('Grace', 'Smith', 'grace.smith@example.com', '+44712345678', '1990-09-30', 'https://pics.example.com/grace.png',
+       ('Grace', 'Smith', 'grace.smith@example.com', '+44712345678', '1990-09-30', '/images/profilepic/1765205812706_7.svg',
         '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
-       ('Henry', 'Davis', 'henry.davis@example.com', '5432109876', NULL, NULL,
+       ('Henry', 'Davis', 'henry.davis@example.com', '5432109876', NULL, '/images/profilepic/1765205816351_8.svg',
         '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
        ('Isabella', 'Martinez', 'isabella.martinez@example.com', '+33123456789', '1993-04-10',
-        'https://pics.example.com/isabella.jpg', '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
+        '/images/profilepic/1765205820715_9.svg', '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW'),
        ('Jack', 'Wilson', 'jack.wilson@example.com', '4321098765', NULL, NULL,
         '$2a$10$WvyoQlHQumGn8pVts2c23evkIdruk/TAhqsjc7mD6lbqlGi56fPLW');
 
@@ -56,16 +56,16 @@ VALUES (1, 1),
        (10, 1);
 
 INSERT INTO teams (team_name, team_pic, creation_date, captain_id)
-VALUES ('Pin Pioneers', 'https://example.com/images/pin-pioneers.png', '2021-03-15', 2),
-       ('Strike Force', 'https://example.com/images/strike-force.png', '2020-07-22', 5),
-       ('Alley Masters', 'https://example.com/images/alley-masters.png', '2022-01-09', 3),
-       ('Rolling Thunder', 'https://example.com/images/rolling-thunder.png', '2019-11-05', 7),
-       ('Spare Parts', 'https://example.com/images/spare-parts.png', '2023-05-18', 1),
-       ('Kingpins', 'https://example.com/images/kingpins.png', '2024-02-27', 9),
-       ('Ten Pin Commandos', 'https://example.com/images/ten-pin-commandos.png', '2022-09-10', 4),
-       ('The Gutter Gurus', 'https://example.com/images/gutter-gurus.png', '2021-06-30', 10),
-       ('Lucky Strikes', 'https://example.com/images/lucky-strikes.png', '2023-12-03', 6),
-       ('Bowl Movement', 'https://example.com/images/bowl-movement.png', '2020-04-14', 8);
+VALUES ('Pin Pioneers', '/images/teampic/1765205533137_1.png', '2021-03-15', 2),
+       ('Strike Force', '/images/teampic//1765205593848_2.png', '2020-07-22', 5),
+       ('Alley Masters', null, '2022-01-09', 3),
+       ('Rolling Thunder', null, '2019-11-05', 7),
+       ('Spare Parts', null, '2023-05-18', 1),
+       ('Kingpins', null, '2024-02-27', 9),
+       ('Ten Pin Commandos', null, '2022-09-10', 4),
+       ('The Gutter Gurus', null, '2021-06-30', 10),
+       ('Lucky Strikes', null, '2023-12-03', 6),
+       ('Bowl Movement', null, '2020-04-14', 8);
 
 INSERT INTO players_teams (team_id, player_id)
 VALUES (1, 1),

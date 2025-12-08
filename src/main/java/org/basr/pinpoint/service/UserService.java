@@ -61,7 +61,7 @@ public class UserService {
         User user = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
 
         String imageName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        Path path = Paths.get("uploads/profilepic" + imageName);
+        Path path = Paths.get("uploads/profilepic/" + imageName);
 
         try {
             fileStorage.writeFile(path, file.getBytes());
