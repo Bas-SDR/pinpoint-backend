@@ -40,6 +40,12 @@ public class UserService {
         return this.repos.findById(id).orElseThrow(()-> new ResourceNotFoundException("User " + id + " not found"));
     }
 
+    public Long getUserIdByEmail(String email) {
+        return repos.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId();
+    }
+
     public List<User> getAllUsers() {
         return this.repos.findAll();
     }

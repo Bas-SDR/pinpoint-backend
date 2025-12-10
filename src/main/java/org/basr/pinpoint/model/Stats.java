@@ -26,7 +26,7 @@ public class Stats {
     public double getAverageScore() {
         if (gamesPlayed == 0)
             return 0;
-        return  (double)totalPinfall / gamesPlayed;
+        return  Math.round((double)totalPinfall / gamesPlayed * 100.0) / 100.0;
     }
 
     @OneToOne(mappedBy = "stats")
