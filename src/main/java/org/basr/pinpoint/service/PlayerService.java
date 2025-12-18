@@ -4,6 +4,8 @@ import org.basr.pinpoint.dto.PlayerResponseDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.mapper.PlayerMapper;
 import org.basr.pinpoint.model.Player;
+import org.basr.pinpoint.model.Stats;
+import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +36,13 @@ public class PlayerService {
     public List<PlayerResponseDto> getTop10HighestSeries() {
         List<Player> players = repos.findTop10ByOrderByStatsHighestSeriesDesc();
         return PlayerMapper.toResponseDtoList(players);
+    }
+
+    public Player createPlayer(User user) {
+        Player player = new Player();
+        player.setUser(user);
+        Stats stats = new Stats();
+        player.setStats(stats);
+        return repos.save(player);
     }
 }

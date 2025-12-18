@@ -6,6 +6,7 @@ import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.helper.FileStorage;
 import org.basr.pinpoint.helper.PasswordHelper;
 import org.basr.pinpoint.mapper.UserMapper;
+import org.basr.pinpoint.model.Player;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -23,18 +24,25 @@ public class UserService {
     private final UserRepository repos;
     private final RoleService roleService;
     private final FileStorage fileStorage;
+    private final PlayerService playerService;
 
-    public UserService(UserRepository repos, RoleService roleService,  FileStorage fileStorage) {
+    public UserService(UserRepository repos, RoleService roleService, FileStorage fileStorage,  PlayerService playerService) {
         this.repos = repos;
         this.roleService = roleService;
         this.fileStorage = fileStorage;
+        this.playerService = playerService;
     }
 
     public User createUser(UserRequestDto userRequestDto) {
         User user = UserMapper.toEntity(userRequestDto);
         user.setPassword(PasswordHelper.encodePassword(userRequestDto));
         roleService.assignDefaultRoleToUser(user);
-        return repos.save(user);
+        User savedUser = repos.save(user);
+
+        Player player = playerService.createPlayer(savedUser);
+        savedUser.setPlayer(player);
+
+        return repos.save(savedUser);
     }
 
     public User getSingleUser(long id) {
