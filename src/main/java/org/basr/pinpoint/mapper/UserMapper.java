@@ -2,6 +2,7 @@ package org.basr.pinpoint.mapper;
 
 import org.basr.pinpoint.dto.UserRequestDto;
 import org.basr.pinpoint.dto.UserResponseDto;
+import org.basr.pinpoint.dto.UserUpdateDto;
 import org.basr.pinpoint.model.User;
 
 import java.util.List;
@@ -19,14 +20,12 @@ public class UserMapper {
         return user;
     }
 
-    public static void updateEntity(User user, UserRequestDto userRequestDto) {
-        user.setFirstName(userRequestDto.getFirstName());
-        user.setLastName(userRequestDto.getLastName());
-        user.setDob(userRequestDto.getDob());
-        user.setEmail(userRequestDto.getEmail());
-        user.setPhone(userRequestDto.getPhone());
-        user.setProfilePic(userRequestDto.getProfilePic());
-        user.setPassword(userRequestDto.getPassword());
+    public static void updateEntity(User user, UserUpdateDto userUpdateDto) {
+        user.setFirstName(userUpdateDto.getFirstName());
+        user.setLastName(userUpdateDto.getLastName());
+        user.setDob(userUpdateDto.getDob());
+        user.setEmail(userUpdateDto.getEmail());
+        user.setPhone(userUpdateDto.getPhone());
     }
 
 

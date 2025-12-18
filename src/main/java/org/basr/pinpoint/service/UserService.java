@@ -1,6 +1,7 @@
 package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.UserRequestDto;
+import org.basr.pinpoint.dto.UserUpdateDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.helper.FileStorage;
 import org.basr.pinpoint.helper.PasswordHelper;
@@ -50,11 +51,11 @@ public class UserService {
         return this.repos.findAll();
     }
 
-    public User updateUser(long id, UserRequestDto userRequestDto) {
+    public User updateUser(long id, UserUpdateDto userUpdateDto) {
         User user = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
 
-        UserMapper.updateEntity(user, userRequestDto);
-        user.setPassword(PasswordHelper.encodePassword(userRequestDto));
+        UserMapper.updateEntity(user, userUpdateDto);
+
         return repos.save(user);
 
     }

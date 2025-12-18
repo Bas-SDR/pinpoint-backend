@@ -1,6 +1,7 @@
 package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.UserRequestDto;
+import org.basr.pinpoint.dto.UserUpdateDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.helper.FileStorage;
 import org.basr.pinpoint.model.User;
@@ -142,11 +143,10 @@ class UserServiceTest {
         when(userRepos.findById(1L)).thenReturn(Optional.of(user1));
         when(userRepos.save(user1)).thenReturn(user1);
 
-        UserRequestDto newUserInfoDto = new UserRequestDto();
+        UserUpdateDto newUserInfoDto = new UserUpdateDto();
         newUserInfoDto.setFirstName("FirstNameNew");
         newUserInfoDto.setLastName("LastNameNew");
         newUserInfoDto.setEmail("Email@example.com");
-        newUserInfoDto.setPassword("password");
         //Act
         User updatedUser = userService.updateUser(1L, newUserInfoDto);
         //Assert
@@ -159,11 +159,10 @@ class UserServiceTest {
         //Arrange
         when(userRepos.findById(500L)).thenReturn(Optional.empty());
 
-        UserRequestDto newUserInfoDto = new UserRequestDto();
+        UserUpdateDto newUserInfoDto = new UserUpdateDto();
         newUserInfoDto.setFirstName("FirstNameNew");
         newUserInfoDto.setLastName("LastNameNew");
         newUserInfoDto.setEmail("Email@example.com");
-        newUserInfoDto.setPassword("password");
 
         //Act
         //Assert
