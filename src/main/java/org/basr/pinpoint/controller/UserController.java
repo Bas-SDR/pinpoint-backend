@@ -1,6 +1,7 @@
 package org.basr.pinpoint.controller;
 
 import jakarta.validation.Valid;
+import org.basr.pinpoint.dto.UserFullResponseDto;
 import org.basr.pinpoint.dto.UserRequestDto;
 import org.basr.pinpoint.dto.UserResponseDto;
 import org.basr.pinpoint.dto.UserUpdateDto;
@@ -47,6 +48,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(UserMapper.toResponseDto(this.service.getSingleUser(id)));
+    }
+
+    @GetMapping("/{id}/private")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ADMIN')")
+    public ResponseEntity<UserFullResponseDto> getUserPrivateById(@PathVariable Long id) {
+        return ResponseEntity.ok(UserMapper.toFullUser(this.service.getSingleUser(id)));
     }
 
     @PutMapping("/{id}")
