@@ -1,5 +1,6 @@
 package org.basr.pinpoint.mapper;
 
+import org.basr.pinpoint.dto.UserFullResponseDto;
 import org.basr.pinpoint.dto.UserRequestDto;
 import org.basr.pinpoint.dto.UserResponseDto;
 import org.basr.pinpoint.dto.UserUpdateDto;
@@ -28,7 +29,6 @@ public class UserMapper {
         user.setPhone(userUpdateDto.getPhone());
     }
 
-
     public static UserResponseDto toResponseDto(User user) {
         UserResponseDto userResponseDto = new UserResponseDto();
         userResponseDto.setId(user.getId());
@@ -36,6 +36,18 @@ public class UserMapper {
         userResponseDto.setLastName(user.getLastName());
         userResponseDto.setProfilePicture(user.getProfilePic());
         return userResponseDto;
+    }
+
+
+    public static UserFullResponseDto toFullUser(User user) {
+        UserFullResponseDto userFullResponseDto = new UserFullResponseDto();
+        userFullResponseDto.setId(user.getId());
+        userFullResponseDto.setFirstName(user.getFirstName());
+        userFullResponseDto.setLastName(user.getLastName());
+        userFullResponseDto.setEmail(user.getEmail());
+        userFullResponseDto.setPhone(user.getPhone());
+        userFullResponseDto.setDob(user.getDob());
+        return userFullResponseDto;
     }
 
     public static List<UserResponseDto> toResponseDtoList(List<User> users) {
