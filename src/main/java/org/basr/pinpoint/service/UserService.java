@@ -1,10 +1,12 @@
 package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.UserRequestDto;
+import org.basr.pinpoint.dto.UserUpdateDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.helper.FileStorage;
 import org.basr.pinpoint.helper.PasswordHelper;
 import org.basr.pinpoint.mapper.UserMapper;
+import org.basr.pinpoint.model.Player;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -22,18 +24,25 @@ public class UserService {
     private final UserRepository repos;
     private final RoleService roleService;
     private final FileStorage fileStorage;
+    private final PlayerService playerService;
 
-    public UserService(UserRepository repos, RoleService roleService,  FileStorage fileStorage) {
+    public UserService(UserRepository repos, RoleService roleService, FileStorage fileStorage,  PlayerService playerService) {
         this.repos = repos;
         this.roleService = roleService;
         this.fileStorage = fileStorage;
+        this.playerService = playerService;
     }
 
     public User createUser(UserRequestDto userRequestDto) {
         User user = UserMapper.toEntity(userRequestDto);
         user.setPassword(PasswordHelper.encodePassword(userRequestDto));
         roleService.assignDefaultRoleToUser(user);
-        return repos.save(user);
+        User savedUser = repos.save(user);
+
+        Player player = playerService.createPlayer(savedUser);
+        savedUser.setPlayer(player);
+
+        return repos.save(savedUser);
     }
 
     public User getSingleUser(long id) {
@@ -50,11 +59,11 @@ public class UserService {
         return this.repos.findAll();
     }
 
-    public User updateUser(long id, UserRequestDto userRequestDto) {
+    public User updateUser(long id, UserUpdateDto userUpdateDto) {
         User user = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
 
-        UserMapper.updateEntity(user, userRequestDto);
-        user.setPassword(PasswordHelper.encodePassword(userRequestDto));
+        UserMapper.updateEntity(user, userUpdateDto);
+
         return repos.save(user);
 
     }

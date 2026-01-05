@@ -15,4 +15,5 @@ public class PlayerResponseDto {
     private String lastName;
     private List<PlayerTeamInfoDto> teams;
     private PlayerStatsDto stats;
+    private String profilePicture;
 }

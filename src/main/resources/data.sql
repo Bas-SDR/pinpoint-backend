@@ -57,7 +57,7 @@ VALUES (1, 1),
 
 INSERT INTO teams (team_name, team_pic, creation_date, captain_id)
 VALUES ('Pin Pioneers', '/images/teampic/1765205533137_1.png', '2021-03-15', 2),
-       ('Strike Force', '/images/teampic//1765205593848_2.png', '2020-07-22', 5),
+       ('Strike Force', '/images/teampic/1765205593848_2.png', '2020-07-22', 5),
        ('Alley Masters', null, '2022-01-09', 3),
        ('Rolling Thunder', null, '2019-11-05', 7),
        ('Spare Parts', null, '2023-05-18', 1),

@@ -31,7 +31,7 @@ public class League {
     @Column(updatable = false)
     private LocalDate creationDate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @JoinTable(
             name = "league_teams",

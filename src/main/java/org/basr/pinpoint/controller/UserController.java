@@ -3,6 +3,7 @@ package org.basr.pinpoint.controller;
 import jakarta.validation.Valid;
 import org.basr.pinpoint.dto.UserRequestDto;
 import org.basr.pinpoint.dto.UserResponseDto;
+import org.basr.pinpoint.dto.UserUpdateDto;
 import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.UserMapper;
 import org.basr.pinpoint.model.User;
@@ -50,8 +51,8 @@ public class UserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("#id == authentication.principal.id or hasRole('ADMIN')")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDto userRequestDto) {
-        User updatedUser = service.updateUser(id, userRequestDto);
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDto userUpdateDto) {
+        User updatedUser = service.updateUser(id, userUpdateDto);
         return ResponseEntity.ok(UserMapper.toResponseDto(updatedUser));
     }
 

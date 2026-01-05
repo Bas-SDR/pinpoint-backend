@@ -52,7 +52,7 @@ public class Team {
     )
     private Set<Player> players = new HashSet<>();
 
-    @ManyToMany(mappedBy = "teams")
+    @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     private Set<League> leagues = new HashSet<>();
 
