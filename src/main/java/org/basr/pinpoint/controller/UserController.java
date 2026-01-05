@@ -1,10 +1,7 @@
 package org.basr.pinpoint.controller;
 
 import jakarta.validation.Valid;
-import org.basr.pinpoint.dto.UserFullResponseDto;
-import org.basr.pinpoint.dto.UserRequestDto;
-import org.basr.pinpoint.dto.UserResponseDto;
-import org.basr.pinpoint.dto.UserUpdateDto;
+import org.basr.pinpoint.dto.*;
 import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.UserMapper;
 import org.basr.pinpoint.model.User;
@@ -68,6 +65,16 @@ public class UserController {
     public ResponseEntity<String> uploadProfilePic(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         String imageUrl = service.uploadProfilePicture(id, file);
         return ResponseEntity.ok(imageUrl);
+    }
+
+    @PatchMapping("/{id}/password")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ADMIN')")
+    public ResponseEntity<String> updatePassword(
+            @PathVariable Long id,
+            @RequestBody @Valid UserPasswordPatchDto userPasswordPatchDto) {
+
+        service.updatePassword(id, userPasswordPatchDto.getPassword());
+        return ResponseEntity.ok("Password successfully updated");
     }
 }
 

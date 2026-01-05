@@ -27,10 +27,6 @@ public class UserMapper {
         user.setDob(userUpdateDto.getDob());
         user.setEmail(userUpdateDto.getEmail());
         user.setPhone(userUpdateDto.getPhone());
-
-        if (userUpdateDto.getPassword() != null && !userUpdateDto.getPassword().isBlank()) {
-            user.setPassword(userUpdateDto.getPassword());
-        }
     }
 
     public static UserResponseDto toResponseDto(User user) {
