@@ -16,4 +16,5 @@ public class UserFullResponseDto {
     private String email;
     private String phone;
     private LocalDate dob;
+    private String profilePic;
 }

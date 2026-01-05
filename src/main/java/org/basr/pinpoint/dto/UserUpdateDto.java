@@ -28,4 +28,6 @@ public class UserUpdateDto {
             message = "Phone must be either 10 digits or '+' followed by country code and 9 digits"
     )
     private String phone;
+    @Size(min = 8, max = 64)
+    private String password;
 }

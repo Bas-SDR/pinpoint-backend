@@ -35,7 +35,7 @@ public class UserService {
 
     public User createUser(UserRequestDto userRequestDto) {
         User user = UserMapper.toEntity(userRequestDto);
-        user.setPassword(PasswordHelper.encodePassword(userRequestDto));
+        user.setPassword(PasswordHelper.encodePassword(userRequestDto.getPassword()));
         roleService.assignDefaultRoleToUser(user);
         User savedUser = repos.save(user);
 
@@ -61,6 +61,10 @@ public class UserService {
 
     public User updateUser(long id, UserUpdateDto userUpdateDto) {
         User user = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
+
+        if (userUpdateDto.getPassword() != null && !userUpdateDto.getPassword().isBlank()) {
+            userUpdateDto.setPassword(PasswordHelper.encodePassword(userUpdateDto.getPassword()));
+        }
 
         UserMapper.updateEntity(user, userUpdateDto);
 
