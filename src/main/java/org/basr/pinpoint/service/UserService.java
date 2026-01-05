@@ -62,10 +62,6 @@ public class UserService {
     public User updateUser(long id, UserUpdateDto userUpdateDto) {
         User user = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
 
-        if (userUpdateDto.getPassword() != null && !userUpdateDto.getPassword().isBlank()) {
-            userUpdateDto.setPassword(PasswordHelper.encodePassword(userUpdateDto.getPassword()));
-        }
-
         UserMapper.updateEntity(user, userUpdateDto);
 
         return repos.save(user);
@@ -93,5 +89,12 @@ public class UserService {
         repos.save(user);
 
         return imageUrl;
+    }
+
+    public void updatePassword(Long id, String newPassword) {
+        User user = repos.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
+        user.setPassword(PasswordHelper.encodePassword(newPassword));
+        repos.save(user);
     }
 }
