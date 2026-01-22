@@ -27,7 +27,7 @@ public class User {
     private LocalDate dob;
     private String profilePic;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     @JoinColumn(name = "player_id")
     private Player player;
