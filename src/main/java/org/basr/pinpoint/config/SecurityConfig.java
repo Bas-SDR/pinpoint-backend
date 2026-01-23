@@ -76,6 +76,8 @@ public class SecurityConfig {
                         .requestMatchers("/roles").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/teams/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/teams/**").authenticated()
                         .requestMatchers("/players/**").permitAll()
                         .requestMatchers("/users/**").authenticated()
                         .requestMatchers("/images/**").permitAll()

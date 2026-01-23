@@ -41,6 +41,9 @@ class UserServiceTest {
     @Mock
     private FileStorage fileStorage;
 
+    @Mock
+    private PlayerService playerService;
+
     @InjectMocks
     private UserService userService;
 
@@ -117,6 +120,30 @@ class UserServiceTest {
             userService.getSingleUser(1000L);
         });
         assertEquals("User 1000 not found", ex.getMessage());
+    }
+
+    @Test
+    void shouldGetUserIdByEmail() {
+        // Arrange
+        when(userRepos.findByEmail("Email@example.com")).thenReturn(Optional.of(user1));
+
+        // Act
+        Long id = userService.getUserIdByEmail("Email@example.com");
+
+        // Assert
+        assertEquals(1L, id);
+    }
+
+    @Test
+    void shouldNotGetUserIdByEmail() {
+        // Arrange
+        when(userRepos.findByEmail("notexisting@email.com")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        RuntimeException ex = assertThrows(RuntimeException.class, () ->
+                userService.getUserIdByEmail("notexisting@email.com"));
+
+        assertEquals("User not found", ex.getMessage());
     }
 
     @Test
@@ -228,8 +255,6 @@ class UserServiceTest {
             userService.uploadProfilePicture(1000L, file);
         });
         assertEquals("User 1000 not found", ex.getMessage());
-
-        // Assert
     }
 
     @Test
@@ -249,5 +274,30 @@ class UserServiceTest {
         });
 
         assertEquals("Image upload failed", ex.getMessage());
+    }
+
+    @Test
+    void shouldUpdatePassword() {
+        // Arrange
+        when(userRepos.findById(1L)).thenReturn(Optional.of(user1));
+
+        //Act
+        userService.updatePassword(1L, "newPassword");
+
+        // Assert
+        assertTrue(user1.getPassword().length() > 0);
+        assertNotEquals("password", user1.getPassword());
+    }
+
+    @Test
+    void shouldNotUpdatePassword() {
+        // Arrange
+        when(userRepos.findById(999L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () ->
+                userService.updatePassword(999L, "somePassword"));
+
+        assertEquals("User 999 not found", ex.getMessage());
     }
 }
