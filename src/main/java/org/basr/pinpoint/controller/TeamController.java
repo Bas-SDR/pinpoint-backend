@@ -78,7 +78,7 @@ public class TeamController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TeamResponseDto> updatePartialTeam(@PathVariable Long id, @RequestPart(required = false) MultipartFile teamPic, @Valid @RequestPart(required = false) TeamPatchDto teamPatchDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+    public ResponseEntity<TeamResponseDto> updatePartialTeam(@PathVariable Long id, @RequestPart(required = false) MultipartFile teamPic, @Valid @RequestBody(required = false) TeamPatchDto teamPatchDto, @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
 
         Team team = service.getTeamById(id);
         authHelper.checkCaptainOrAdmin(team, principal);
@@ -103,5 +103,24 @@ public class TeamController {
 
         String imageUrl = service.uploadTeamPicture(id, file);
         return ResponseEntity.ok(imageUrl);
+    }
+
+    @PatchMapping("/{id}/kick/{playerId}")
+    public ResponseEntity<Void> kickPlayer(@PathVariable Long id, @PathVariable Long playerId,
+                                           @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+        Team team = service.getTeamById(id);
+        authHelper.checkCaptainOrAdmin(team, principal);
+        service.removePlayer(id, playerId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/leave/{playerId}")
+    public ResponseEntity<Void> leaveTeam(@PathVariable Long id, @PathVariable Long playerId,
+                                          @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+        if (!principal.getId().equals(playerId)) {
+            throw new AccessDeniedException("You can only leave your own team.");
+        }
+        service.removePlayer(id, playerId);
+        return ResponseEntity.ok().build();
     }
 }

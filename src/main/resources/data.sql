@@ -71,6 +71,8 @@ INSERT INTO players_teams (team_id, player_id)
 VALUES (1, 1),
        (1, 2),
        (1, 3),
+       (1, 4),
+       (1, 5),
        (2, 4),
        (2, 5),
        (2, 6),

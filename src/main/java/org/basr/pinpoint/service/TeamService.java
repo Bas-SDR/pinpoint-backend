@@ -6,6 +6,7 @@ import org.basr.pinpoint.dto.TeamPatchDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.helper.FileStorage;
 import org.basr.pinpoint.mapper.TeamMapper;
+import org.basr.pinpoint.model.Player;
 import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.TeamRepository;
@@ -23,12 +24,14 @@ public class TeamService {
     private final TeamRepository repos;
     private final RoleService roleService;
     private final UserService userService;
+    private final PlayerService playerService;
     private final FileStorage fileStorage;
 
-    public TeamService(TeamRepository repos, RoleService roleService, UserService userService, FileStorage fileStorage) {
+    public TeamService(TeamRepository repos, RoleService roleService, UserService userService, PlayerService playerService , FileStorage fileStorage) {
         this.repos = repos;
         this.roleService = roleService;
         this.userService = userService;
+        this.playerService = playerService;
         this.fileStorage = fileStorage;
     }
 
@@ -106,5 +109,19 @@ public class TeamService {
 
         return imageUrl;
 
+    }
+
+    public void removePlayer(Long teamId, Long playerId) {
+        Team team = repos.findById(teamId)
+                .orElseThrow(() -> new ResourceNotFoundException("Team " + teamId + " not found"));
+
+        Player player = playerService.getPlayerById(playerId);
+
+        if (team.getPlayers() != null && team.getPlayers().contains(player)) {
+            team.getPlayers().remove(player);
+            repos.save(team);
+        } else {
+            throw new ResourceNotFoundException("Player " + playerId + " is not in team " + teamId);
+        }
     }
 }
