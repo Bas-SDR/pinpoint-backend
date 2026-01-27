@@ -60,12 +60,14 @@ public class UserService {
 
     public List<User> getUserByName(String firstName, String lastName) {
         List<User> users;
+        firstName = StringUtils.hasText(firstName) ? firstName.trim() : null;
+        lastName = StringUtils.hasText(lastName) ? lastName.trim() : null;
 
-        if (StringUtils.hasText(firstName) && StringUtils.hasText(lastName)) {
+        if (firstName != null && lastName != null) {
             users = repos.findByFirstNameAndLastName(firstName, lastName);
-        } else if (StringUtils.hasText(firstName)) {
+        } else if (firstName != null) {
             users = repos.findByFirstName(firstName);
-        } else if (StringUtils.hasText(lastName)) {
+        } else if (lastName != null) {
             users = repos.findByLastName(lastName);
         } else {
             return List.of();
