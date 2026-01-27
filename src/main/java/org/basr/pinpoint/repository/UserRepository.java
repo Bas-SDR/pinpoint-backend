@@ -1,6 +1,5 @@
 package org.basr.pinpoint.repository;
 
-import org.basr.pinpoint.model.League;
 import org.basr.pinpoint.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,9 +10,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByDobAfter(LocalDate date);
     Optional<User> findByEmail(String email);
-    List<User> findByFirstName(String name);
-    List<User> findByLastName(String name);
-    List<User> findByFirstNameAndLastName(String firstName, String lastName);
+    List<User> findByFirstNameContainingIgnoreCase(String firstName);
+    List<User> findByLastNameContainingIgnoreCase(String lastName);
+    List<User> findByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(String firstName, String lastName);
 }
 
 
