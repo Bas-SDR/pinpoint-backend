@@ -46,7 +46,7 @@ public class UserController {
         return ResponseEntity.ok(UserMapper.toResponseDto(this.service.getSingleUser(id)));
     }
 
-    @GetMapping(params = "name")
+    @GetMapping("/search")
     public ResponseEntity<List<UserResponseDto>> getUserByName(@RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) {
 
         return ResponseEntity.ok(UserMapper.toResponseDtoList(service.getUserByName(firstName, lastName)));

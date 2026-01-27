@@ -125,7 +125,7 @@ class UserServiceTest {
     @Test
     void shouldGetUserByFirstNameAndLastName() {
         //Act
-        when(userRepos.findByFirstNameAndLastName("FirstName",  "LastName")).thenReturn(Arrays.asList(user1, user2));
+        when(userRepos.findByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase("FirstName",  "LastName")).thenReturn(Arrays.asList(user1, user2));
         //Arrange
         List<User> users = userService.getUserByName("FirstName", "LastName");
         //Assert
@@ -137,7 +137,7 @@ class UserServiceTest {
     @Test
     void shouldGetUserByFirstName() {
         //Act
-        when(userRepos.findByFirstName("FirstName")).thenReturn(Arrays.asList(user1, user2));
+        when(userRepos.findByFirstNameContainingIgnoreCase("FirstName")).thenReturn(Arrays.asList(user1, user2));
         //Arrange
         List<User> users = userService.getUserByName("FirstName", null);
         //Assert
@@ -149,7 +149,7 @@ class UserServiceTest {
     @Test
     void shouldGetUserByLastName() {
         //Act
-        when(userRepos.findByLastName("LastName")).thenReturn(Arrays.asList(user1, user2));
+        when(userRepos.findByLastNameContainingIgnoreCase("LastName")).thenReturn(Arrays.asList(user1, user2));
         //Arrange
         List<User> users = userService.getUserByName(null, "LastName");
         //Assert
@@ -161,7 +161,7 @@ class UserServiceTest {
     @Test
     void shouldNotGetUserByName() {
         //Act
-        when(userRepos.findByFirstNameAndLastName("FirstName",  "LastName3")).thenReturn(List.of());
+        when(userRepos.findByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase("FirstName",  "LastName3")).thenReturn(List.of());
         //Arrange
         List<User> users = userService.getUserByName("FirstName", "LastName3");
         //Assert
