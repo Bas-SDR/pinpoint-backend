@@ -1,10 +1,7 @@
 package org.basr.pinpoint.controller;
 
 import jakarta.validation.Valid;
-import org.basr.pinpoint.dto.TeamCreateDto;
-import org.basr.pinpoint.dto.TeamPatchDto;
-import org.basr.pinpoint.dto.TeamRequestDto;
-import org.basr.pinpoint.dto.TeamResponseDto;
+import org.basr.pinpoint.dto.*;
 import org.basr.pinpoint.helper.TeamAuthorizationHelper;
 import org.basr.pinpoint.helper.UriHelper;
 import org.basr.pinpoint.mapper.TeamMapper;
@@ -118,9 +115,18 @@ public class TeamController {
     public ResponseEntity<Void> leaveTeam(@PathVariable Long id, @PathVariable Long playerId,
                                           @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
         if (!principal.getId().equals(playerId)) {
-            throw new AccessDeniedException("You can only leave your own team.");
+            throw new AccessDeniedException("You can only leave a team you are part of.");
         }
         service.removePlayer(id, playerId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/addplayer/{playerId}")
+    public ResponseEntity<TeamPlayerResponseDto> addPlayerToTeam(@PathVariable Long id, @PathVariable Long playerId,
+                                                                 @AuthenticationPrincipal MyUserDetails principal) throws AccessDeniedException {
+        Team team = service.getTeamById(id);
+        authHelper.checkCaptainOrAdmin(team, principal);
+
+        return ResponseEntity.ok(service.addPlayer(id, playerId));
     }
 }

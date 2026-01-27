@@ -1,6 +1,7 @@
 package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.UserRequestDto;
+import org.basr.pinpoint.dto.UserResponseDto;
 import org.basr.pinpoint.dto.UserUpdateDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.helper.FileStorage;
@@ -10,6 +11,7 @@ import org.basr.pinpoint.model.Player;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -53,6 +56,21 @@ public class UserService {
         return repos.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"))
                 .getId();
+    }
+
+    public List<User> getUserByName(String firstName, String lastName) {
+        List<User> users;
+
+        if (StringUtils.hasText(firstName) && StringUtils.hasText(lastName)) {
+            users = repos.findByFirstNameAndLastName(firstName, lastName);
+        } else if (StringUtils.hasText(firstName)) {
+            users = repos.findByFirstName(firstName);
+        } else if (StringUtils.hasText(lastName)) {
+            users = repos.findByLastName(lastName);
+        } else {
+            return List.of();
+        }
+        return users;
     }
 
     public List<User> getAllUsers() {
