@@ -123,6 +123,61 @@ class UserServiceTest {
     }
 
     @Test
+    void shouldGetUserByFirstNameAndLastName() {
+        //Act
+        when(userRepos.findByFirstNameAndLastName("FirstName",  "LastName")).thenReturn(Arrays.asList(user1, user2));
+        //Arrange
+        List<User> users = userService.getUserByName("FirstName", "LastName");
+        //Assert
+        assertEquals(2, users.size());
+        assertEquals(user1, users.get(0));
+        assertEquals(user2, users.get(1));
+    }
+
+    @Test
+    void shouldGetUserByFirstName() {
+        //Act
+        when(userRepos.findByFirstName("FirstName")).thenReturn(Arrays.asList(user1, user2));
+        //Arrange
+        List<User> users = userService.getUserByName("FirstName", null);
+        //Assert
+        assertEquals(2, users.size());
+        assertEquals(user1, users.get(0));
+        assertEquals(user2, users.get(1));
+    }
+
+    @Test
+    void shouldGetUserByLastName() {
+        //Act
+        when(userRepos.findByLastName("LastName")).thenReturn(Arrays.asList(user1, user2));
+        //Arrange
+        List<User> users = userService.getUserByName(null, "LastName");
+        //Assert
+        assertEquals(2, users.size());
+        assertEquals(user1, users.get(0));
+        assertEquals(user2, users.get(1));
+    }
+
+    @Test
+    void shouldNotGetUserByName() {
+        //Act
+        when(userRepos.findByFirstNameAndLastName("FirstName",  "LastName3")).thenReturn(List.of());
+        //Arrange
+        List<User> users = userService.getUserByName("FirstName", "LastName3");
+        //Assert
+        assertEquals(0, users.size());
+    }
+
+    @Test
+    void shouldNotGetResult() {
+        //Act
+        //Arrange
+        List<User> users = userService.getUserByName(null, null);
+        //Assert
+        assertTrue(users.isEmpty());
+    }
+
+    @Test
     void shouldGetUserIdByEmail() {
         // Arrange
         when(userRepos.findByEmail("Email@example.com")).thenReturn(Optional.of(user1));

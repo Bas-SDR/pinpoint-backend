@@ -2,9 +2,11 @@ package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.TeamCreateDto;
 import org.basr.pinpoint.dto.TeamPatchDto;
+import org.basr.pinpoint.dto.TeamPlayerResponseDto;
 import org.basr.pinpoint.dto.TeamRequestDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.helper.FileStorage;
+import org.basr.pinpoint.model.Player;
 import org.basr.pinpoint.model.Team;
 import org.basr.pinpoint.model.User;
 import org.basr.pinpoint.repository.TeamRepository;
@@ -20,9 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -43,6 +43,9 @@ class TeamServiceTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    PlayerService playerService;
 
     @Mock
     FileStorage fileStorage;
@@ -274,9 +277,8 @@ class TeamServiceTest {
         //Arrange
         TeamPatchDto newTeamInfo =  new TeamPatchDto();
         newTeamInfo.setTeamName("NewTeam1");
-
-        when(teamRepos.findById(1000L)).thenReturn(Optional.empty());
         //Act
+        when(teamRepos.findById(1000L)).thenReturn(Optional.empty());
         //Assert
         ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
             teamService.patchTeam(1000L, newTeamInfo);
@@ -336,5 +338,112 @@ class TeamServiceTest {
         });
 
         assertEquals("Image upload failed", ex.getMessage());
+    }
+
+    @Test
+    void shouldRemovePlayerFromTeam() {
+        //Arrange
+        User playerUser = new User();
+        ReflectionTestUtils.setField(playerUser, "id", 10L);
+        playerUser.setFirstName("Captain");
+        playerUser.setLastName("Leader");
+
+        Player player = new Player();
+        ReflectionTestUtils.setField(player, "id", 10L);
+        player.setUser(playerUser);
+
+        team1.setPlayers(new HashSet<>(Set.of(player)));
+
+        //Act
+        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
+        when(playerService.getPlayerById(10L)).thenReturn(player);
+
+        teamService.removePlayer(1L, 10L);
+
+        //Assert
+        assertFalse(team1.getPlayers().contains(player));
+    }
+
+    @Test
+    void shouldThrowExceptionPlayerPartOfTeam() {
+        //Arrange
+        team1.setPlayers(new HashSet<>());
+
+        Player player = new Player();
+        ReflectionTestUtils.setField(player, "id", 1000L);
+
+        //Act
+        when(teamRepos.findById(team1.getId())).thenReturn(Optional.of(team1));
+        when(playerService.getPlayerById(1000L)).thenReturn(player);
+
+        //Assert
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () ->
+                teamService.removePlayer(team1.getId(), 1000L));
+
+        assertEquals("Player 1000 is not in team " + team1.getId(), ex.getMessage());
+    }
+
+    @Test
+    void shouldThrowExceptionTeamPlayersNull() {
+        //Arrange
+        ReflectionTestUtils.setField(team1, "id", 1L);
+        team1.setPlayers(null);
+
+        Player player = new Player();
+        ReflectionTestUtils.setField(player, "id", 1000L);
+
+        //Act
+        when(teamRepos.findById(team1.getId())).thenReturn(Optional.of(team1));
+        when(playerService.getPlayerById(1000L)).thenReturn(player);
+
+        //Assert
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> teamService.removePlayer(team1.getId(), 1000L));
+
+        assertEquals("Player 1000 is not in team 1", ex.getMessage());
+    }
+
+    @Test
+    void shouldAddPlayerToTeam() {
+        //Arrange
+        User playerUser = new User();
+        ReflectionTestUtils.setField(playerUser, "id", 10L);
+        playerUser.setFirstName("Captain");
+        playerUser.setLastName("Leader");
+
+        Player player = new Player();
+        ReflectionTestUtils.setField(player, "id", 10L);
+        player.setUser(playerUser);
+
+        team1.setPlayers(new HashSet<>());
+
+        //Act
+        when(teamRepos.findById(1L)).thenReturn(Optional.of(team1));
+        when(playerService.getPlayerById(10L)).thenReturn(player);
+
+        TeamPlayerResponseDto teamPlayerResponseDto = teamService.addPlayer(1L, 10L);
+
+        //Assert
+        assertTrue(team1.getPlayers().contains(player));
+        assertEquals("team1", teamPlayerResponseDto.getTeamName());
+        assertEquals("Captain", teamPlayerResponseDto.getPlayerFirstName());
+        assertEquals("Leader", teamPlayerResponseDto.getPlayerLastName());
+    }
+
+    @Test
+    void shouldNotAddPlayerToTeam() {
+        // Arrange
+        Player player = new Player();
+        ReflectionTestUtils.setField(player, "id", 1000L);
+
+        team1.setPlayers(new HashSet<>(Set.of(player)));
+
+        //Act
+        when(teamRepos.findById(team1.getId())).thenReturn(Optional.of(team1));
+        when(playerService.getPlayerById(1000L)).thenReturn(player);
+
+        //Assert
+        IllegalStateException ex = assertThrows(IllegalStateException.class,
+                () -> teamService.addPlayer(team1.getId(), 1000L));
     }
 }

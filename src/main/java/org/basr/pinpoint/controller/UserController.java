@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -45,6 +44,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(UserMapper.toResponseDto(this.service.getSingleUser(id)));
+    }
+
+    @GetMapping(params = "name")
+    public ResponseEntity<List<UserResponseDto>> getUserByName(@RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) {
+
+        return ResponseEntity.ok(UserMapper.toResponseDtoList(service.getUserByName(firstName, lastName)));
     }
 
     @GetMapping("/{id}/private")

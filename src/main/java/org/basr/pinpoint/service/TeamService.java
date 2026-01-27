@@ -1,6 +1,7 @@
 package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.TeamCreateDto;
+import org.basr.pinpoint.dto.TeamPlayerResponseDto;
 import org.basr.pinpoint.dto.TeamRequestDto;
 import org.basr.pinpoint.dto.TeamPatchDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
@@ -27,7 +28,7 @@ public class TeamService {
     private final PlayerService playerService;
     private final FileStorage fileStorage;
 
-    public TeamService(TeamRepository repos, RoleService roleService, UserService userService, PlayerService playerService , FileStorage fileStorage) {
+    public TeamService(TeamRepository repos, RoleService roleService, UserService userService, PlayerService playerService, FileStorage fileStorage) {
         this.repos = repos;
         this.roleService = roleService;
         this.userService = userService;
@@ -51,7 +52,7 @@ public class TeamService {
     }
 
     public Team getTeamById(Long id) {
-        return this.repos.findById(id).orElseThrow(()-> new ResourceNotFoundException("Team " + id + " not found"));
+        return this.repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("Team " + id + " not found"));
     }
 
     public boolean deleteTeam(Long id) {
@@ -64,7 +65,7 @@ public class TeamService {
     }
 
     public Team updateTeam(Long id, TeamRequestDto teamRequestDto) {
-        Team team = repos.findById(id).orElseThrow(()-> new ResourceNotFoundException("Team " + id + " not found"));
+        Team team = repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("Team " + id + " not found"));
 
         TeamMapper.updateEntity(team, teamRequestDto);
 
@@ -123,5 +124,24 @@ public class TeamService {
         } else {
             throw new ResourceNotFoundException("Player " + playerId + " is not in team " + teamId);
         }
+    }
+
+    public TeamPlayerResponseDto addPlayer(Long teamId, Long playerId) {
+        Team team = repos.findById(teamId)
+                .orElseThrow(() -> new ResourceNotFoundException("Team " + teamId + " not found"));
+
+        Player player = playerService.getPlayerById(playerId);
+
+        if (team.getPlayers().contains(player)) {
+            throw new IllegalStateException("Player already part of team");
+        }
+
+        team.getPlayers().add(player);
+        repos.save(team);
+        return new TeamPlayerResponseDto(
+                team.getTeamName(),
+                player.getUser().getFirstName(),
+                player.getUser().getLastName()
+        );
     }
 }
