@@ -73,6 +73,11 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("File size is too large");
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleIllegalState(IllegalStateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<String> handleGenericException(Exception ex) {
 //        return ResponseEntity
