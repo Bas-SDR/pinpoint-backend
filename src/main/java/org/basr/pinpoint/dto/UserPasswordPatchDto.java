@@ -1,9 +1,7 @@
 package org.basr.pinpoint.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 public class UserPasswordPatchDto {

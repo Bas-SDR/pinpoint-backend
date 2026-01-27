@@ -1,6 +1,5 @@
 package org.basr.pinpoint.helper;
 
-import org.basr.pinpoint.dto.UserRequestDto;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 

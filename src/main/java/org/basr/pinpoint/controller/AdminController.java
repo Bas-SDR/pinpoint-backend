@@ -2,7 +2,7 @@ package org.basr.pinpoint.controller;
 
 import org.basr.pinpoint.dto.AdminUserResponseDto;
 import org.basr.pinpoint.mapper.AdminUserMapper;
-import org.basr.pinpoint.service.*;
+import org.basr.pinpoint.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

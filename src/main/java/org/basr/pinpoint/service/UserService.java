@@ -1,7 +1,6 @@
 package org.basr.pinpoint.service;
 
 import org.basr.pinpoint.dto.UserRequestDto;
-import org.basr.pinpoint.dto.UserResponseDto;
 import org.basr.pinpoint.dto.UserUpdateDto;
 import org.basr.pinpoint.exception.ResourceNotFoundException;
 import org.basr.pinpoint.helper.FileStorage;
@@ -19,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {

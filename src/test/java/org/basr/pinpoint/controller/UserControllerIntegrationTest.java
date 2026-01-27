@@ -1,8 +1,6 @@
 package org.basr.pinpoint.controller;
 
 import com.jayway.jsonpath.JsonPath;
-import org.basr.pinpoint.model.User;
-import org.basr.pinpoint.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

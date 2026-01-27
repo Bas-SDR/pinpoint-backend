@@ -1,6 +1,5 @@
 package org.basr.pinpoint.repository;
 
-import org.basr.pinpoint.model.League;
 import org.basr.pinpoint.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

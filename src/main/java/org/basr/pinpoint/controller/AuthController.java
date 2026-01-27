@@ -4,7 +4,6 @@ import org.basr.pinpoint.dto.AuthDto;
 import org.basr.pinpoint.dto.AuthResponseDto;
 import org.basr.pinpoint.security.JwtService;
 import org.basr.pinpoint.service.UserService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
